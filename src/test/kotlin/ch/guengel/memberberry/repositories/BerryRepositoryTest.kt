@@ -42,8 +42,8 @@ internal class BerryRepositoryTest {
         assertThat(actual?.subject, `is`(berry.subject))
         assertThat(actual?.period, `is`(berry.period))
         assertThat(actual?.userId, `is`(berry.userId))
-        assertThat(actual?.nextExecution, `is`(nextExecution))
-        assertThat(actual?.lastExecution, `is`(lastExecution))
+        assertThat(actual?.nextExecution?.toEpochSecond(), `is`(nextExecution.toEpochSecond()))
+        assertThat(actual?.lastExecution?.toEpochSecond(), `is`(lastExecution.toEpochSecond()))
     }
 
     @Test
@@ -70,7 +70,10 @@ internal class BerryRepositoryTest {
                 }
                 .await()
                 .indefinitely()
-        assertThat(berry, `is`(actual))
+        assertThat(actual?.id, `is`(berry.id))
+        assertThat(actual?.subject, `is`(berry.subject))
+        assertThat(actual?.nextExecution?.toEpochSecond(), `is`(berry.nextExecution.toEpochSecond()))
+        assertThat(actual?.lastExecution?.toEpochSecond(), `is`(berry.lastExecution.toEpochSecond()))
     }
 
     @Test
@@ -103,8 +106,8 @@ internal class BerryRepositoryTest {
         assertThat(updatedBerry?.subject, `is`("test updated"))
         assertThat(updatedBerry?.period, `is`(RememberPeriod.DAILY))
         assertThat(updatedBerry?.userId, `is`("other-id"))
-        assertThat(updatedBerry?.nextExecution, `is`(lastExecution))
-        assertThat(updatedBerry?.lastExecution, `is`(nextExecution))
+        assertThat(updatedBerry?.nextExecution?.toEpochSecond(), `is`(lastExecution.toEpochSecond()))
+        assertThat(updatedBerry?.lastExecution?.toEpochSecond(), `is`(nextExecution.toEpochSecond()))
     }
 
     @Test

@@ -1,0 +1,24 @@
+FROM oracle/graalvm-ce:20.2.0-java11 AS build
+RUN gu install native-image
+COPY .mvn /build/.mvn/
+COPY pom.xml mvnw /build/
+WORKDIR /build
+RUN ./mvnw -f pom.xml -B de.qaware.maven:go-offline-maven-plugin:1.2.5:resolve-dependencies
+COPY src /build/src/
+RUN ./mvnw -f pom.xml -DskipTests -Pnative clean package
+
+FROM centos:centos8
+COPY --from=build /build/target/*-runner /app/application
+WORKDIR /app
+
+# set up permissions for user `1000`
+RUN chmod 775 /app /app/application \
+  && chown -R 1000 /app \
+  && chmod -R "g+rwX" /app \
+  && chown -R 1000:root /app
+
+EXPOSE 8080
+USER 1000
+
+ENTRYPOINT ["/app/application"]
+CMD ["-Dquarkus.http.host=0.0.0.0"]

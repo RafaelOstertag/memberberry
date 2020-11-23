@@ -192,7 +192,20 @@
         </plugins>
     </build>
 
-    <licenses>BSD-2-Clause</licenses>
+    <licenses>
+        <license>
+            <name>BSD-2-Clause</name>
+            <url>https://opensource.org/licenses/BSD-2-Clause</url>
+        </license>
+    </licenses>
+
+    <distributionManagement>
+        <repository>
+            <id>memberberry-maven</id>
+            <name>Funnel Maven Repository</name>
+            <url>https://colossus.kruemel.home/nexus/repository/memberberry/</url>
+        </repository>
+    </distributionManagement>
 
     <profiles>
         <profile>

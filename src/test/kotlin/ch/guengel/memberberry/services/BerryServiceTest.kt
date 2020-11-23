@@ -28,6 +28,9 @@ internal class BerryServiceTest {
     @MockK
     lateinit var berryRepository: BerryRepository
 
+    @MockK
+    lateinit var executionCalculatorService: ExecutionCalculatorService
+
     @InjectMockKs
     lateinit var berryService: BerryService
 
@@ -104,6 +107,9 @@ internal class BerryServiceTest {
             Uni.createFrom().item(berry.id)
         }
 
+        every { executionCalculatorService.calculateNextExecution(eq(RememberPeriod.WEEKLY), any()) }
+                .answers { OffsetDateTime.MIN }
+
         val createUpdateBerry = CreateUpdateBerry("test", RememberPeriod.WEEKLY)
         val permissions = Permissions("user1", false)
         val newBerryId = berryService.create(createUpdateBerry, permissions).await().indefinitely()
@@ -113,6 +119,7 @@ internal class BerryServiceTest {
             assertThat(userId, `is`("user1"))
             assertThat(subject, `is`("test"))
             assertThat(period, `is`(RememberPeriod.WEEKLY))
+            assertThat(nextExecution, `is`(OffsetDateTime.MIN))
         }
     }
 

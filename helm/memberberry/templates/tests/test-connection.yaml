@@ -1,9 +1,10 @@
+# @formatter:off
 apiVersion: v1
 kind: Pod
 metadata:
   name: "{{ include "memberberry.fullname" . }}-test-connection"
   labels:
-    { { - include "memberberry.labels" . | nindent 4 } }
+    {{- include "memberberry.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
