@@ -1,4 +1,6 @@
-# @formatter:off
+{ { /*
+    @formatter:off
+*/}}
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "memberberry.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}

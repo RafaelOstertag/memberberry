@@ -5,6 +5,7 @@ import ch.guengel.memberberry.dto.CreateUpdateBerry
 
 import ch.guengel.memberberry.services.BerryService
 import ch.guengel.memberberry.services.Permissions
+import io.quarkus.security.Authenticated
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import java.net.URI
@@ -18,6 +19,7 @@ import javax.ws.rs.core.SecurityContext
 
 @Path("/v1/berries")
 @Produces(MediaType.APPLICATION_JSON)
+@Authenticated
 class BerryResources(@Inject private val berryService: BerryService) {
 
     @GET

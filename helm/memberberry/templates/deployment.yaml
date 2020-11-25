@@ -38,14 +38,14 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-#          livenessProbe:
-#            httpGet:
-#              path: /
-#              port: http
-#          readinessProbe:
-#            httpGet:
-#              path: /
-#              port: http
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
           env:
             - name: QUARKUS_MONGODB_CONNECTION_STRING
               valueFrom:
