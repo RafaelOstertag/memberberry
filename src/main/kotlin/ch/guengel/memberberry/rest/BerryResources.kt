@@ -2,7 +2,6 @@ package ch.guengel.memberberry.rest
 
 import ch.guengel.memberberry.domain.Berry
 import ch.guengel.memberberry.dto.CreateUpdateBerry
-
 import ch.guengel.memberberry.services.BerryService
 import ch.guengel.memberberry.services.Permissions
 import io.quarkus.security.Authenticated
