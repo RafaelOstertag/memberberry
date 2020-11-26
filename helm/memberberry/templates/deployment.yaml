@@ -65,9 +65,9 @@ spec:
             - name: QUARKUS_LOG_HANDLER_GELF_ENABLE
               value: "true"
             - name: QUARKUS_LOG_HANDLER_GELF_HOST
-              value: 192.168.100.3
+              value: "192.168.100.3"
             - name: QUARKUS_LOG_HANDLER_GELF_PORT
-              value: 12201
+              value: "12201"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
