@@ -42,6 +42,7 @@ spec:
             httpGet:
               path: /health/live
               port: http
+            initialDelaySeconds: 20
           readinessProbe:
             httpGet:
               path: /health/ready
@@ -62,10 +63,10 @@ spec:
                 secretKeyRef:
                   name: keycloak
                   key: client-secret
-            - name: QUARKUS_LOG_HANDLER_GELF_ENABLE
+            - name: QUARKUS_LOG_HANDLER_GELF_ENABLED
               value: "true"
             - name: QUARKUS_LOG_HANDLER_GELF_HOST
-              value: "192.168.100.3"
+              value: "udp:192.168.100.3"
             - name: QUARKUS_LOG_HANDLER_GELF_PORT
               value: "12201"
           resources:
