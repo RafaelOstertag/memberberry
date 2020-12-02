@@ -45,14 +45,16 @@ internal class ReminderServiceTest {
                 nextExecutionDate,
                 lastExecutionDate)
 
-        every { berryRepository.findBerriesDueAfter(any()) }.answers {
+        every { berryRepository.findBerriesDueBy(any()) }.answers {
             Multi
-                    .createFrom()
-                    .item(berry)
+                .createFrom()
+                .item(berry)
         }
         every {
-            executionCalculatorService.calculateNextExecution(RememberPeriod.DAILY,
-                    any())
+            executionCalculatorService.calculateNextExecution(
+                RememberPeriod.DAILY,
+                any()
+            )
         }.answers { nextExecutionDate.plusDays(1) }
         every {
             reminderStrategy.remind(berry)
@@ -87,14 +89,16 @@ internal class ReminderServiceTest {
                 nextExecutionDate,
                 lastExecutionDate)
 
-        every { berryRepository.findBerriesDueAfter(any()) }.answers {
+        every { berryRepository.findBerriesDueBy(any()) }.answers {
             Multi
-                    .createFrom()
-                    .items(berry, berry, berry)
+                .createFrom()
+                .items(berry, berry, berry)
         }
         every {
-            executionCalculatorService.calculateNextExecution(RememberPeriod.DAILY,
-                    any())
+            executionCalculatorService.calculateNextExecution(
+                RememberPeriod.DAILY,
+                any()
+            )
         }.answers { nextExecutionDate.plusDays(1) }
         every {
             reminderStrategy.remind(berry)

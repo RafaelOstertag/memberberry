@@ -197,32 +197,42 @@ internal class BerryRepositoryTest {
     }
 
     @Test
-    fun `find berries due after`() {
-        repeat(3) {
-            val berry = Berry(UUID.randomUUID(), "test", RememberPeriod.WEEKLY, "user-id", nextExecution, lastExecution)
-            berryRepository.create(berry).await().indefinitely()
-        }
-
-        repeat(3) {
-            val berry = Berry(UUID.randomUUID(),
-                    "test",
-                    RememberPeriod.WEEKLY,
-                    "user-id",
-                    nextExecution.minusDays(2),
-                    lastExecution)
-            berryRepository.create(berry).await().indefinitely()
-        }
-
+    fun `find berries due on day of`() {
         val now = OffsetDateTime.now()
+
+        repeat(3) {
+            val berry = Berry(
+                UUID.randomUUID(),
+                "test",
+                RememberPeriod.WEEKLY,
+                "user-id",
+                now.minusDays(it.toLong()),
+                lastExecution
+            )
+            berryRepository.create(berry).await().indefinitely()
+        }
+
+        repeat(3) {
+            val berry = Berry(
+                UUID.randomUUID(),
+                "test",
+                RememberPeriod.WEEKLY,
+                "user-id",
+                nextExecution.plusDays(it.toLong()),
+                lastExecution
+            )
+            berryRepository.create(berry).await().indefinitely()
+        }
+
         val berries = berryRepository
-                .findBerriesDueAfter(now)
+            .findBerriesDueBy(now)
                 .subscribe()
                 .asStream()
                 .collect(Collectors.toList())
 
         assertThat(berries, hasSize(3))
         berries.forEach {
-            assertThat(now, `is`(lessThan(it.nextExecution)))
+            assertThat(now, `is`(greaterThanOrEqualTo(it.nextExecution)))
         }
     }
 }
