@@ -46,12 +46,12 @@ ingress:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: memberberry.app.k8s.kruemel.home
+    - host: memberberry.guengel.ch
       paths:
         - /v1/
   tls:
     - hosts:
-        - memberberry.app.k8s.kruemel.home
+        - memberberry.guengel.ch
 
 resources:
   limits:
