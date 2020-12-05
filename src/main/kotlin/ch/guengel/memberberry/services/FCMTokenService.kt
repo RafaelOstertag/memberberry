@@ -15,13 +15,13 @@ class FCMTokenService(@Inject private val fcmTokenRepository: FCMTokenRepository
             .item(createUpdateFCMToken)
             .onItem().transform { FCMToken(userId, it.token) }
             .onItem().transformToUni { fcmToken -> fcmTokenRepository.createOrUpdateToken(fcmToken) }
-            .onItem().ifNotNull().transform { it -> }
+            .onItem().ifNotNull().transform { _ -> }
             .onItem().ifNull().failWith(FCMTokenCreateOrUpdateExecption("Unable to create or update FCM token"))
 
     fun findTokenForUser(userId: String): Uni<FCMToken?> = Uni
             .createFrom()
             .item(userId)
-            .onItem().transformToUni { userId -> fcmTokenRepository.findTokensForUser(userId) }
+            .onItem().transformToUni { uid -> fcmTokenRepository.findTokensForUser(uid) }
 }
 
 class FCMTokenCreateOrUpdateExecption(msg: String) : RuntimeException(msg)

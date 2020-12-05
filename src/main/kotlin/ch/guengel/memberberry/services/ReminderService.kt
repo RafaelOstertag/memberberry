@@ -33,8 +33,9 @@ class ReminderService(
                     berry
                 }
             }
+            .onItem().transformToUniAndConcatenate { berry -> berryRepository.update(berry) }
             .subscribe().with(
-                { updatedBerry -> berryRepository.update(updatedBerry) },
+                { _ -> },
                 { throwable -> logger.error("Error while reminding.", throwable) },
                 { logger.info("Done reminding") }
             )

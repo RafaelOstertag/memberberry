@@ -69,8 +69,17 @@ spec:
               value: "udp:192.168.100.3"
             - name: QUARKUS_LOG_HANDLER_GELF_PORT
               value: "12201"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /config/secrets/firebase.cred.json
+          volumeMounts:
+            - name: firebase-credentials
+              mountPath: /config/secrets
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+       volumes:
+        - name: firebase-credentials
+          secret:
+           secretName: fcm-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
