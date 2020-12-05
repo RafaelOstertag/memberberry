@@ -76,10 +76,10 @@ spec:
               mountPath: /config/secrets
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-       volumes:
+      volumes:
         - name: firebase-credentials
           secret:
-           secretName: fcm-config
+            secretName: firebase-credentials
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
