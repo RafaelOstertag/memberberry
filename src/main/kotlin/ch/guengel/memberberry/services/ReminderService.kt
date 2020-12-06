@@ -26,6 +26,7 @@ class ReminderService(
             .onItem().transform { berry ->
                 try {
                     reminderStrategy.remind(berry)
+                    logger.info("Notification for berry ${berry.id} sent")
                     val nextExecution = executionCalculatorService.calculateNextExecution(berry.period, now)
                     Berry(berry.id, berry.subject, berry.period, berry.userId, nextExecution, now)
                 } catch (e: Exception) {
