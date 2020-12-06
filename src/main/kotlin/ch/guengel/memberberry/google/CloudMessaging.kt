@@ -6,9 +6,9 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
-import javax.inject.Singleton
+import javax.enterprise.context.ApplicationScoped
 
-@Singleton
+@ApplicationScoped
 class CloudMessaging {
     private val firebaseApp = FirebaseApp.initializeApp(
         FirebaseOptions.builder()
