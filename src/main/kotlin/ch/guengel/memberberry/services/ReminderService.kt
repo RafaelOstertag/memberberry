@@ -5,7 +5,6 @@ import ch.guengel.memberberry.repositories.BerryRepository
 import io.quarkus.scheduler.Scheduled
 import org.jboss.logging.Logger
 import java.time.OffsetDateTime
-import java.time.temporal.ChronoUnit
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -19,10 +18,9 @@ class ReminderService(
     @Scheduled(cron = "{memberberry.reminder.cron}")
     fun remind() {
         val now = OffsetDateTime.now()
-        val today = now.truncatedTo(ChronoUnit.DAYS)
         logger.info("Start reminding")
         berryRepository
-            .findBerriesDueBy(today)
+            .findBerriesDueBy(now)
             .onItem().transform { berry ->
                 try {
                     reminderStrategy.remind(berry)
