@@ -16,21 +16,21 @@ import javax.inject.Inject
 @ApplicationScoped
 class FCMTokenRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
     private val collection: ReactiveMongoCollection<Document> = reactiveMongoClient
-            .getDatabase("memberberry")
-            .getCollection("fcmtoken")
+        .getDatabase("memberberry")
+        .getCollection("fcmtoken")
 
     fun findTokensForUser(userId: String): Uni<FCMToken?> = collection
-            .find(eq("_id", userId))
-            .toUni()
-            .onItem()
-            .ifNotNull()
-            .transform { document -> FCMToken(document.getString("_id"), document.getString("token")) }
+        .find(eq("_id", userId))
+        .toUni()
+        .onItem()
+        .ifNotNull()
+        .transform { document -> FCMToken(document.getString("_id"), document.getString("token")) }
 
     fun createOrUpdateToken(fcmToken: FCMToken): Uni<UpdateResult?> = collection
-            .updateOne(eq("_id", fcmToken.userId), Updates.set("token", fcmToken.token), UpdateOptions().upsert(true))
+        .updateOne(eq("_id", fcmToken.userId), Updates.set("token", fcmToken.token), UpdateOptions().upsert(true))
 
     fun deleteAll(): Uni<Long> = collection
-            .deleteMany(BasicDBObject())
-            .onItem()
-            .transform { it.deletedCount }
+        .deleteMany(BasicDBObject())
+        .onItem()
+        .transform { it.deletedCount }
 }

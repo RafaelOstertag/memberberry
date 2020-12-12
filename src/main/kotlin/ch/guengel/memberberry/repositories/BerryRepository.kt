@@ -88,7 +88,6 @@ class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClie
     )
 }
 
-
 class OffsetDateTimeCodec : Codec<OffsetDateTime> {
     override fun encode(writer: BsonWriter, value: OffsetDateTime, encoderContext: EncoderContext) {
         writer.writeDateTime(value.toInstant().toEpochMilli())

@@ -20,18 +20,20 @@ import javax.ws.rs.core.SecurityContext
 @Authenticated
 class FCMTokenResource(@Inject private val fcmTokenService: FCMTokenService) {
     @PUT
-    fun createOrUpdateFCMToken(@Context securityContext: SecurityContext,
-                               @Valid createUpdateFCMToken: CreateUpdateFCMToken): Uni<Response> =
-            fcmTokenService.createOrUpdateToken(createUpdateFCMToken, securityContext.userPrincipal.name)
-                    .onItem().ifNotNull().transform { Response.noContent() }
-                    .onFailure().recoverWithItem { -> Response.status(Response.Status.INTERNAL_SERVER_ERROR) }
-                    .onItem().transform { it.build() }
+    fun createOrUpdateFCMToken(
+        @Context securityContext: SecurityContext,
+        @Valid createUpdateFCMToken: CreateUpdateFCMToken
+    ): Uni<Response> =
+        fcmTokenService.createOrUpdateToken(createUpdateFCMToken, securityContext.userPrincipal.name)
+            .onItem().ifNotNull().transform { Response.noContent() }
+            .onFailure().recoverWithItem { -> Response.status(Response.Status.INTERNAL_SERVER_ERROR) }
+            .onItem().transform { it.build() }
 
     @GET
     fun getFCMTOken(@Context securityContext: SecurityContext): Uni<Response> = fcmTokenService
-            .findTokenForUser(securityContext.userPrincipal.name)
-            .onItem().ifNotNull().transform { Response.ok(it) }
-            .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
-            .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
-            .onItem().transform { it.build() }
+        .findTokenForUser(securityContext.userPrincipal.name)
+        .onItem().ifNotNull().transform { Response.ok(it) }
+        .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
+        .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
+        .onItem().transform { it.build() }
 }

@@ -22,44 +22,49 @@ import javax.ws.rs.core.SecurityContext
 class BerryResources(@Inject private val berryService: BerryService) {
 
     @GET
-    fun getBerries(@Context securityContext: SecurityContext): Multi<Berry> = berryService.getAll(securityContext.toPermissions())
+    fun getBerries(@Context securityContext: SecurityContext): Multi<Berry> =
+        berryService.getAll(securityContext.toPermissions())
 
     @GET
     @Path("{id}")
     fun getBerry(@PathParam("id") id: String, @Context securityContext: SecurityContext) = berryService
-            .find(id, securityContext.toPermissions())
-            .onItem().ifNotNull().transform { Response.ok(it) }
+        .find(id, securityContext.toPermissions())
+        .onItem().ifNotNull().transform { Response.ok(it) }
+        .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
+        .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
+        .onItem().transform { it.build() }
+
+    @POST
+    fun createBerry(
+        @Context securityContext: SecurityContext,
+        @Valid createUpdateBerry: CreateUpdateBerry
+    ): Uni<Response> = berryService
+        .create(createUpdateBerry, securityContext.toPermissions())
+        .onItem().transform { URI.create("/v1/berries/${it}") }
+        .onItem().transform { uri -> Response.created(uri).build() }
+
+    @PUT
+    @Path("{id}")
+    fun updateBerry(
+        @Context securityContext: SecurityContext,
+        @PathParam("id") id: String,
+        @Valid createUpdateBerry: CreateUpdateBerry
+    ): Uni<Response> =
+        berryService.update(id, createUpdateBerry, securityContext.toPermissions())
+            .onItem().ifNotNull().transform { result -> if (result == 0L) throw BerryUpdateException() else result }
+            .onItem().ifNotNull().transform { Response.noContent() }
             .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
             .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
             .onItem().transform { it.build() }
 
-    @POST
-    fun createBerry(@Context securityContext: SecurityContext,
-                    @Valid createUpdateBerry: CreateUpdateBerry): Uni<Response> = berryService
-            .create(createUpdateBerry, securityContext.toPermissions())
-            .onItem().transform { URI.create("/v1/berries/${it}") }
-            .onItem().transform { uri -> Response.created(uri).build() }
-
-    @PUT
-    @Path("{id}")
-    fun updateBerry(@Context securityContext: SecurityContext,
-                    @PathParam("id") id: String,
-                    @Valid createUpdateBerry: CreateUpdateBerry): Uni<Response> =
-            berryService.update(id, createUpdateBerry, securityContext.toPermissions())
-                    .onItem().ifNotNull().transform { result -> if (result == 0L) throw BerryUpdateException() else result }
-                    .onItem().ifNotNull().transform { Response.noContent() }
-                    .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
-                    .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
-                    .onItem().transform { it.build() }
-
     @DELETE
     @Path("{id}")
     fun deleteBerry(@PathParam("id") id: String, @Context securityContext: SecurityContext): Uni<Response> =
-            berryService.deleteBerry(id, securityContext.toPermissions())
-                    .onItem().ifNotNull().transform { Response.status(Response.Status.NO_CONTENT) }
-                    .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
-                    .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
-                    .onItem().transform { it.build() }
+        berryService.deleteBerry(id, securityContext.toPermissions())
+            .onItem().ifNotNull().transform { Response.status(Response.Status.NO_CONTENT) }
+            .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
+            .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
+            .onItem().transform { it.build() }
 
     private fun SecurityContext.toPermissions() = Permissions(this.userPrincipal.name, this.isUserInRole("admin"))
 }

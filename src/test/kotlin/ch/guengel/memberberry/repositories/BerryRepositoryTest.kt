@@ -49,27 +49,29 @@ internal class BerryRepositoryTest {
     @Test
     fun `find non-existing berry`() {
         val berry = berryRepository
-                .findBerry(UUID.randomUUID())
-                .await()
-                .indefinitely()
+            .findBerry(UUID.randomUUID())
+            .await()
+            .indefinitely()
         assertThat(berry, `is`(nullValue()))
     }
 
     @Test
     fun `find berry by id and user id`() {
-        val berry = Berry(UUID.randomUUID(),
-                "test",
-                RememberPeriod.DAILY,
-                UUID.randomUUID().toString(),
-                nextExecution,
-                lastExecution)
+        val berry = Berry(
+            UUID.randomUUID(),
+            "test",
+            RememberPeriod.DAILY,
+            UUID.randomUUID().toString(),
+            nextExecution,
+            lastExecution
+        )
         val actual = berryRepository
-                .create(berry)
-                .chain { uuid ->
-                    berryRepository.findBerryByIdAndUserId(uuid, berry.userId)
-                }
-                .await()
-                .indefinitely()
+            .create(berry)
+            .chain { uuid ->
+                berryRepository.findBerryByIdAndUserId(uuid, berry.userId)
+            }
+            .await()
+            .indefinitely()
         assertThat(actual?.id, `is`(berry.id))
         assertThat(actual?.subject, `is`(berry.subject))
         assertThat(actual?.nextExecution?.toEpochSecond(), `is`(berry.nextExecution.toEpochSecond()))
@@ -79,9 +81,9 @@ internal class BerryRepositoryTest {
     @Test
     fun `find non-existing berry by id and user id`() {
         val berry = berryRepository
-                .findBerryByIdAndUserId(UUID.randomUUID(), "non-existing")
-                .await()
-                .indefinitely()
+            .findBerryByIdAndUserId(UUID.randomUUID(), "non-existing")
+            .await()
+            .indefinitely()
         assertThat(berry, `is`(nullValue()))
     }
 
@@ -89,19 +91,19 @@ internal class BerryRepositoryTest {
     fun update() {
         val berry = Berry(UUID.randomUUID(), "test", RememberPeriod.WEEKLY, "user-id", nextExecution, lastExecution)
         val updatedBerry: Berry? = berryRepository.create(berry)
-                .onItem()
-                .transform {
-                    Berry(it, "test updated", RememberPeriod.DAILY, "other-id", lastExecution, nextExecution)
-                }
-                .chain { it: Berry ->
-                    berryRepository.update(it)
-                }
-                .chain { count ->
-                    assertThat(count, `is`(1L))
-                    berryRepository.findBerry(berry.id)
-                }
-                .await()
-                .indefinitely()
+            .onItem()
+            .transform {
+                Berry(it, "test updated", RememberPeriod.DAILY, "other-id", lastExecution, nextExecution)
+            }
+            .chain { it: Berry ->
+                berryRepository.update(it)
+            }
+            .chain { count ->
+                assertThat(count, `is`(1L))
+                berryRepository.findBerry(berry.id)
+            }
+            .await()
+            .indefinitely()
         assertThat(updatedBerry, `is`(notNullValue()))
         assertThat(updatedBerry?.subject, `is`("test updated"))
         assertThat(updatedBerry?.period, `is`(RememberPeriod.DAILY))
@@ -118,54 +120,74 @@ internal class BerryRepositoryTest {
 
     @Test
     fun `get all berries`() {
-        berryRepository.create(Berry(UUID.randomUUID(),
+        berryRepository.create(
+            Berry(
+                UUID.randomUUID(),
                 "",
                 RememberPeriod.WEEKLY,
                 "",
                 nextExecution,
-                lastExecution)).await().indefinitely()
-        berryRepository.create(Berry(UUID.randomUUID(),
+                lastExecution
+            )
+        ).await().indefinitely()
+        berryRepository.create(
+            Berry(
+                UUID.randomUUID(),
                 "",
                 RememberPeriod.DAILY,
                 "",
                 nextExecution,
-                lastExecution)).await().indefinitely()
+                lastExecution
+            )
+        ).await().indefinitely()
 
         val berries = berryRepository
-                .getAll()
-                .subscribe()
-                .asStream()
-                .collect(Collectors.toList())
+            .getAll()
+            .subscribe()
+            .asStream()
+            .collect(Collectors.toList())
 
         assertThat(berries, hasSize(2))
     }
 
     @Test
     fun `get all berries for user`() {
-        berryRepository.create(Berry(UUID.randomUUID(),
+        berryRepository.create(
+            Berry(
+                UUID.randomUUID(),
                 "berry 1",
                 RememberPeriod.WEEKLY,
                 "user1",
                 nextExecution,
-                lastExecution)).await().indefinitely()
-        berryRepository.create(Berry(UUID.randomUUID(),
+                lastExecution
+            )
+        ).await().indefinitely()
+        berryRepository.create(
+            Berry(
+                UUID.randomUUID(),
                 "berry 2",
                 RememberPeriod.DAILY,
                 "user1",
                 nextExecution,
-                lastExecution)).await().indefinitely()
-        berryRepository.create(Berry(UUID.randomUUID(),
+                lastExecution
+            )
+        ).await().indefinitely()
+        berryRepository.create(
+            Berry(
+                UUID.randomUUID(),
                 "",
                 RememberPeriod.DAILY,
                 "user2",
                 nextExecution,
-                lastExecution)).await().indefinitely()
+                lastExecution
+            )
+        ).await().indefinitely()
 
         val berries = berryRepository
-                .getAll("user1")
-                .subscribe()
-                .asStream()
-                .collect(Collectors.toList())
+            .getAll("user1")
+            .subscribe()
+            .asStream()
+            .collect(Collectors.toList())
 
         assertThat(berries, hasSize(2))
         berries.forEach {
@@ -177,9 +199,9 @@ internal class BerryRepositoryTest {
     fun `update non-existing berry`() {
         val berry = Berry(UUID.randomUUID(), "test", RememberPeriod.WEEKLY, "user-id", nextExecution, lastExecution)
         val count = berryRepository
-                .update(berry)
-                .await()
-                .indefinitely()
+            .update(berry)
+            .await()
+            .indefinitely()
         assertThat(count, `is`(0L))
     }
 
@@ -187,12 +209,12 @@ internal class BerryRepositoryTest {
     fun `delete berry by id`() {
         val berry = Berry(UUID.randomUUID(), "test", RememberPeriod.WEEKLY, "user-id", nextExecution, lastExecution)
         val count = berryRepository
-                .create(berry)
-                .chain { it ->
-                    berryRepository.deleteBerryById(it)
-                }
-                .await()
-                .indefinitely()
+            .create(berry)
+            .chain { it ->
+                berryRepository.deleteBerryById(it)
+            }
+            .await()
+            .indefinitely()
         assertThat(count, `is`(1L))
     }
 
@@ -226,9 +248,9 @@ internal class BerryRepositoryTest {
 
         val berries = berryRepository
             .findBerriesDueBy(now)
-                .subscribe()
-                .asStream()
-                .collect(Collectors.toList())
+            .subscribe()
+            .asStream()
+            .collect(Collectors.toList())
 
         assertThat(berries, hasSize(3))
         berries.forEach {

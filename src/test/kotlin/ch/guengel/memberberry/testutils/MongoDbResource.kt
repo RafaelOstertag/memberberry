@@ -11,8 +11,10 @@ class MongoDbResource : QuarkusTestResourceLifecycleManager {
     override fun start(): MutableMap<String, String> {
         mongoDBContainer.start()
         return Collections
-                .singletonMap("quarkus.mongodb.connection-string",
-                        "${mongoDBContainer.replicaSetUrl}?uuidRepresentation=standard")
+            .singletonMap(
+                "quarkus.mongodb.connection-string",
+                "${mongoDBContainer.replicaSetUrl}?uuidRepresentation=standard"
+            )
     }
 
     override fun stop() {

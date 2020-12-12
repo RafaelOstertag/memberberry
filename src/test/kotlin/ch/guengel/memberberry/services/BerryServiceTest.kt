@@ -28,9 +28,6 @@ internal class BerryServiceTest {
     @MockK
     lateinit var berryRepository: BerryRepository
 
-    @MockK
-    lateinit var executionCalculatorService: ExecutionCalculatorService
-
     @InjectMockKs
     lateinit var berryService: BerryService
 
@@ -38,14 +35,16 @@ internal class BerryServiceTest {
     fun `find berry as user`() {
         val berryUUID = UUID.randomUUID()
         val userUUID = UUID.randomUUID()
-        val berry = Berry(berryUUID,
-                "subject",
-                RememberPeriod.MONTHLY,
-                userUUID.toString(),
-                nextExecution,
-                lastExecution)
+        val berry = Berry(
+            berryUUID,
+            "subject",
+            RememberPeriod.MONTHLY,
+            userUUID.toString(),
+            nextExecution,
+            lastExecution
+        )
 
-        every { berryRepository.findBerry(berryUUID) }.answers {
+        every { berryRepository.findBerry(berryUUID) } answers {
             Uni.createFrom().item(berry)
         }
 
@@ -60,14 +59,16 @@ internal class BerryServiceTest {
     fun `find berry as admin`() {
         val berryUUID = UUID.randomUUID()
         val userUUID = UUID.randomUUID()
-        val berry = Berry(berryUUID,
-                "subject",
-                RememberPeriod.MONTHLY,
-                userUUID.toString(),
-                nextExecution,
-                lastExecution)
+        val berry = Berry(
+            berryUUID,
+            "subject",
+            RememberPeriod.MONTHLY,
+            userUUID.toString(),
+            nextExecution,
+            lastExecution
+        )
 
-        every { berryRepository.findBerry(berryUUID) }.answers {
+        every { berryRepository.findBerry(berryUUID) } answers {
             Uni.createFrom().item(berry)
         }
 
@@ -82,14 +83,16 @@ internal class BerryServiceTest {
     fun `should not find other users berries`() {
         val berryUUID = UUID.randomUUID()
         val userUUID = UUID.randomUUID()
-        val berry = Berry(berryUUID,
-                "subject",
-                RememberPeriod.MONTHLY,
-                userUUID.toString(),
-                nextExecution,
-                lastExecution)
+        val berry = Berry(
+            berryUUID,
+            "subject",
+            RememberPeriod.MONTHLY,
+            userUUID.toString(),
+            nextExecution,
+            lastExecution
+        )
 
-        every { berryRepository.findBerry(berryUUID) }.answers {
+        every { berryRepository.findBerry(berryUUID) } answers {
             Uni.createFrom().item(berry)
         }
 
@@ -102,15 +105,13 @@ internal class BerryServiceTest {
     @Test
     fun `create berry`() {
         val captureSlot = slot<Berry>()
-        every { berryRepository.create(capture(captureSlot)) }.answers {
+        every { berryRepository.create(capture(captureSlot)) } answers {
             val berry: Berry = arg(0)
             Uni.createFrom().item(berry.id)
         }
 
-        every { executionCalculatorService.calculateNextExecution(eq(RememberPeriod.WEEKLY), any()) }
-                .answers { OffsetDateTime.MIN }
-
-        val createUpdateBerry = CreateUpdateBerry("test", RememberPeriod.WEEKLY)
+        val firstExecution = OffsetDateTime.now()
+        val createUpdateBerry = CreateUpdateBerry("test", firstExecution, RememberPeriod.WEEKLY)
         val permissions = Permissions("user1", false)
         val newBerryId = berryService.create(createUpdateBerry, permissions).await().indefinitely()
 
@@ -119,26 +120,203 @@ internal class BerryServiceTest {
             assertThat(userId, `is`("user1"))
             assertThat(subject, `is`("test"))
             assertThat(period, `is`(RememberPeriod.WEEKLY))
-            assertThat(nextExecution, `is`(OffsetDateTime.MIN))
+            assertThat(nextExecution, `is`(firstExecution))
         }
     }
 
     @Test
-    fun update() {
+    fun `update existing berry`() {
+        val permissions = Permissions("user1", false)
+        val berryId = UUID.randomUUID()
+
+        val lastExecution = OffsetDateTime.now().minusDays(1)
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item(
+                Berry(berryId, "subject", RememberPeriod.DAILY, "user1", OffsetDateTime.now(), lastExecution)
+            )
+        }
+
+        val captureSlot = slot<Berry>()
+        every { berryRepository.update(capture(captureSlot)) } answers {
+            Uni.createFrom().item(1)
+        }
+
+        val nextExecution = OffsetDateTime.now()
+        val createUpdateBerry = CreateUpdateBerry("test", nextExecution, RememberPeriod.WEEKLY)
+
+        val updatedBerries =
+            berryService.update(berryId.toString(), createUpdateBerry, permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(1L))
+        assertThat(captureSlot.isCaptured, `is`(true))
+        val updatedBerry = captureSlot.captured
+        assertThat(updatedBerry.id, `is`(berryId))
+        assertThat(updatedBerry.lastExecution, `is`(lastExecution))
+        assertThat(updatedBerry.nextExecution, `is`(nextExecution))
+        assertThat(updatedBerry.period, `is`(RememberPeriod.WEEKLY))
     }
 
     @Test
-    fun deleteBerry() {
+    fun `update existing berry as admin`() {
+        val permissions = Permissions("user3", true)
+        val berryId = UUID.randomUUID()
+
+        val lastExecution = OffsetDateTime.now().minusDays(1)
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item(
+                Berry(berryId, "subject", RememberPeriod.DAILY, "user1", OffsetDateTime.now(), lastExecution)
+            )
+        }
+
+        val captureSlot = slot<Berry>()
+        every { berryRepository.update(capture(captureSlot)) } answers {
+            Uni.createFrom().item(1)
+        }
+
+        val nextExecution = OffsetDateTime.now()
+        val createUpdateBerry = CreateUpdateBerry("test", nextExecution, RememberPeriod.WEEKLY)
+
+        val updatedBerries =
+            berryService.update(berryId.toString(), createUpdateBerry, permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(1L))
+        assertThat(captureSlot.isCaptured, `is`(true))
+        val updatedBerry = captureSlot.captured
+        assertThat(updatedBerry.id, `is`(berryId))
+        assertThat(updatedBerry.lastExecution, `is`(lastExecution))
+        assertThat(updatedBerry.nextExecution, `is`(nextExecution))
+        assertThat(updatedBerry.period, `is`(RememberPeriod.WEEKLY))
+    }
+
+    @Test
+    fun `update non-existing berry`() {
+        val permissions = Permissions("user1", false)
+        val berryId = UUID.randomUUID()
+
+        every { berryRepository.findBerry(berryId) } answers { Uni.createFrom().item { null } }
+
+        val nextExecution = OffsetDateTime.now()
+        val createUpdateBerry = CreateUpdateBerry("test", nextExecution, RememberPeriod.WEEKLY)
+
+        val updatedBerries =
+            berryService.update(berryId.toString(), createUpdateBerry, permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(nullValue()))
+    }
+
+    @Test
+    fun `update berry not allowed`() {
+        val permissions = Permissions("user2", false)
+        val berryId = UUID.randomUUID()
+
+        val lastExecution = OffsetDateTime.now().minusDays(1)
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item(
+                Berry(berryId, "subject", RememberPeriod.DAILY, "user1", OffsetDateTime.now(), lastExecution)
+            )
+        }
+
+        val captureSlot = slot<Berry>()
+        every { berryRepository.update(capture(captureSlot)) } answers {
+            Uni.createFrom().item(1)
+        }
+
+        val nextExecution = OffsetDateTime.now()
+        val createUpdateBerry = CreateUpdateBerry("test", nextExecution, RememberPeriod.WEEKLY)
+
+        val updatedBerries =
+            berryService.update(berryId.toString(), createUpdateBerry, permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(nullValue()))
+    }
+
+    @Test
+    fun `delete existing berry`() {
+        val permissions = Permissions("user1", false)
+        val berryId = UUID.randomUUID()
+
+        val lastExecution = OffsetDateTime.now().minusDays(1)
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item(
+                Berry(berryId, "subject", RememberPeriod.DAILY, "user1", OffsetDateTime.now(), lastExecution)
+            )
+        }
+
+        val captureSlot = slot<UUID>()
+        every { berryRepository.deleteBerryById(capture(captureSlot)) } answers {
+            Uni.createFrom().item(1)
+        }
+
+        val updatedBerries =
+            berryService.deleteBerry(berryId.toString(), permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(1L))
+        assertThat(captureSlot.isCaptured, `is`(true))
+        assertThat(captureSlot.captured, `is`(berryId))
+    }
+
+    @Test
+    fun `delete existing berry as admin`() {
+        val permissions = Permissions("user2", true)
+        val berryId = UUID.randomUUID()
+
+        val lastExecution = OffsetDateTime.now().minusDays(1)
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item(
+                Berry(berryId, "subject", RememberPeriod.DAILY, "user1", OffsetDateTime.now(), lastExecution)
+            )
+        }
+
+        val captureSlot = slot<UUID>()
+        every { berryRepository.deleteBerryById(capture(captureSlot)) } answers {
+            Uni.createFrom().item(1)
+        }
+
+        val updatedBerries =
+            berryService.deleteBerry(berryId.toString(), permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(1L))
+        assertThat(captureSlot.isCaptured, `is`(true))
+        assertThat(captureSlot.captured, `is`(berryId))
+    }
+
+    @Test
+    fun `delete berry not allowed`() {
+        val permissions = Permissions("user2", false)
+        val berryId = UUID.randomUUID()
+
+        val lastExecution = OffsetDateTime.now().minusDays(1)
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item(
+                Berry(berryId, "subject", RememberPeriod.DAILY, "user1", OffsetDateTime.now(), lastExecution)
+            )
+        }
+
+        val updatedBerries =
+            berryService.deleteBerry(berryId.toString(), permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(nullValue()))
+    }
+
+    @Test
+    fun `delete non-existing berry`() {
+        val permissions = Permissions("user1", false)
+        val berryId = UUID.randomUUID()
+
+        every { berryRepository.findBerry(berryId) } answers {
+            Uni.createFrom().item { null }
+        }
+
+        val updatedBerries =
+            berryService.deleteBerry(berryId.toString(), permissions).await().indefinitely()
+        assertThat(updatedBerries, `is`(nullValue()))
     }
 
     @Test
     fun `should retrieve all items by user`() {
-        val answer = Multi.createFrom().item(Berry(UUID.randomUUID(),
+        val answer = Multi.createFrom().item(
+            Berry(
+                UUID.randomUUID(),
                 "",
                 RememberPeriod.DAILY,
                 "",
                 nextExecution,
-                lastExecution))
+                lastExecution
+            )
+        )
         every { berryRepository.getAll(any()) }.answers { answer }
         every { berryRepository.getAll() }.answers { answer }
 
@@ -152,12 +330,16 @@ internal class BerryServiceTest {
 
     @Test
     fun `should retrieve all items as admin`() {
-        val answer = Multi.createFrom().item(Berry(UUID.randomUUID(),
+        val answer = Multi.createFrom().item(
+            Berry(
+                UUID.randomUUID(),
                 "",
                 RememberPeriod.DAILY,
                 "",
                 nextExecution,
-                lastExecution))
+                lastExecution
+            )
+        )
         every { berryRepository.getAll(any()) }.answers { answer }
         every { berryRepository.getAll() }.answers { answer }
 

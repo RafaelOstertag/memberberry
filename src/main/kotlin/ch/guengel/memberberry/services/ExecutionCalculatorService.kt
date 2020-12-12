@@ -6,10 +6,10 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class ExecutionCalculatorService {
-    fun calculateNextExecution(period: RememberPeriod, from: OffsetDateTime = OffsetDateTime.now()) =
-            when (period) {
-                RememberPeriod.DAILY -> from.plusDays(1)
-                RememberPeriod.WEEKLY -> from.plusWeeks(1)
-                RememberPeriod.MONTHLY -> from.plusMonths(1)
-            }
+    fun calculateNextExecution(period: RememberPeriod, from: OffsetDateTime = OffsetDateTime.now()): OffsetDateTime =
+        when (period) {
+            RememberPeriod.DAILY -> from.plusDays(1)
+            RememberPeriod.WEEKLY -> from.plusWeeks(1)
+            RememberPeriod.MONTHLY -> from.plusMonths(1)
+        }
 }

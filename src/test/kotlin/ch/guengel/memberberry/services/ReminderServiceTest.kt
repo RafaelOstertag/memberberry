@@ -38,12 +38,14 @@ internal class ReminderServiceTest {
     fun `happy path`() {
         val nextExecutionDate = OffsetDateTime.now()
         val lastExecutionDate = nextExecutionDate.minusDays(1)
-        val berry = Berry(UUID.randomUUID(),
-                "test",
-                RememberPeriod.DAILY,
-                "userid",
-                nextExecutionDate,
-                lastExecutionDate)
+        val berry = Berry(
+            UUID.randomUUID(),
+            "test",
+            RememberPeriod.DAILY,
+            "userid",
+            nextExecutionDate,
+            lastExecutionDate
+        )
 
         every { berryRepository.findBerriesDueBy(any()) }.answers {
             Multi
@@ -70,8 +72,10 @@ internal class ReminderServiceTest {
             assertThat(this.subject, `is`("test"))
             assertThat(this.userId, `is`("userid"))
             assertThat(this.period, `is`(RememberPeriod.DAILY))
-            assertThat(this.nextExecution.truncatedTo(ChronoUnit.DAYS),
-                    `is`(nextExecutionDate.plusDays(1).truncatedTo(ChronoUnit.DAYS)))
+            assertThat(
+                this.nextExecution.truncatedTo(ChronoUnit.DAYS),
+                `is`(nextExecutionDate.plusDays(1).truncatedTo(ChronoUnit.DAYS))
+            )
         }
 
         verify(exactly = 1) { executionCalculatorService.calculateNextExecution(eq(RememberPeriod.DAILY), any()) }
@@ -82,12 +86,14 @@ internal class ReminderServiceTest {
     fun `with errors`() {
         val nextExecutionDate = OffsetDateTime.now()
         val lastExecutionDate = nextExecutionDate.minusDays(1)
-        val berry = Berry(UUID.randomUUID(),
-                "test",
-                RememberPeriod.DAILY,
-                "userid",
-                nextExecutionDate,
-                lastExecutionDate)
+        val berry = Berry(
+            UUID.randomUUID(),
+            "test",
+            RememberPeriod.DAILY,
+            "userid",
+            nextExecutionDate,
+            lastExecutionDate
+        )
 
         every { berryRepository.findBerriesDueBy(any()) }.answers {
             Multi
@@ -103,9 +109,9 @@ internal class ReminderServiceTest {
         every {
             reminderStrategy.remind(berry)
         }
-                .answers { }
-                .andThen { throw RuntimeException("Test exception") }
-                .andThen { }
+            .answers { }
+            .andThen { throw RuntimeException("Test exception") }
+            .andThen { }
 
         every { berryRepository.update(any()) }.answers { Uni.createFrom().item(1L) }
 
