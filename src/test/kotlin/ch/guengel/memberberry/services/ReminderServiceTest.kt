@@ -14,10 +14,8 @@ import io.smallrye.mutiny.Uni
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.OffsetDateTime
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
@@ -72,10 +70,7 @@ internal class ReminderServiceTest {
             assertThat(this.subject, `is`("test"))
             assertThat(this.userId, `is`("userid"))
             assertThat(this.period, `is`(RememberPeriod.DAILY))
-            assertThat(
-                this.nextExecution.truncatedTo(ChronoUnit.DAYS),
-                `is`(nextExecutionDate.plusDays(1).truncatedTo(ChronoUnit.DAYS))
-            )
+            assertThat(this.nextExecution, `is`(nextExecutionDate.plusDays(1)))
         }
 
         verify(exactly = 1) { executionCalculatorService.calculateNextExecution(eq(RememberPeriod.DAILY), any()) }

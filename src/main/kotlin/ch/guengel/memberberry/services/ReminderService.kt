@@ -25,7 +25,12 @@ class ReminderService(
                 try {
                     reminderStrategy.remind(berry)
                     logger.info("Notification for berry ${berry.id} sent")
-                    val nextExecution = executionCalculatorService.calculateNextExecution(berry.period, now)
+                    val currentExecution = now.withHour(berry.nextExecution.hour)
+                        .withMinute(berry.nextExecution.minute)
+                        .withSecond(0)
+                        .withNano(0)
+                    val nextExecution =
+                        executionCalculatorService.calculateNextExecution(berry.period, currentExecution)
                     Berry(berry.id, berry.subject, berry.period, berry.userId, nextExecution, now)
                 } catch (e: Exception) {
                     logger.error("Error while reminding.", e)
