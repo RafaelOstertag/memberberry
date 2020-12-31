@@ -16,6 +16,7 @@ pipeline {
         ansiColor('xterm')
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
         timestamps()
+        disableConcurrentBuilds()
     }
 
     stages {
@@ -33,8 +34,8 @@ pipeline {
 
         stage('Sonarcloud') {
             steps {
-                withCredentials([string(credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f', variable: 'accessToken')]) {
-                    sh label: 'sonarcloud', script: "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.login=$accessToken"
+                withSonarQubeEnv(installationName: 'Sonarcloud', credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f') {
+                    sh label: 'sonarcloud', script: "mvn $SONAR_MAVEN_GOAL"
                 }
             }
         }
