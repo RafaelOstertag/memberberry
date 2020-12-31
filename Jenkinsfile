@@ -4,7 +4,7 @@ pipeline {
     }
 
     triggers {
-        pollSCM ''
+        pollSCM '@hourly'
         cron '@daily'
     }
 
@@ -28,6 +28,14 @@ pipeline {
         stage('Build and Test') {
             steps {
                 sh 'mvn -B install'
+            }
+        }
+
+        stage('Sonarcloud') {
+            steps {
+                withCredentials([string(credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f', variable: 'accessToken')]) {
+                    sh label: 'sonarcloud', script: "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.login=$accessToken"
+                }
             }
         }
 

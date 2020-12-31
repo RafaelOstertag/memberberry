@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel</groupId>
     <artifactId>memberberry</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
@@ -22,6 +22,11 @@
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <testcontainers.version>1.15.0</testcontainers.version>
         <mockk.version>1.10.2</mockk.version>
+
+        <!-- Sonar -->
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <!-- Organization and project keys are displayed in the right sidebar of the project homepage -->
+        <sonar.organization>rafaelostertag</sonar.organization>
     </properties>
 
     <dependencyManagement>
