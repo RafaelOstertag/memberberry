@@ -20,12 +20,6 @@ pipeline {
     }
 
     stages {
-        stage('Clean') {
-            steps {
-                sh 'mvn -B clean'
-            }
-        }
-
         stage('Build and Test') {
             steps {
                 sh 'mvn -B install'
