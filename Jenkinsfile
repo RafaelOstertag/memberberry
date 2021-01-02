@@ -14,34 +14,36 @@ pipeline {
 
     options {
         ansiColor('xterm')
-        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '15')
         timestamps()
+        disableConcurrentBuilds()
     }
 
     stages {
-        stage('Clean') {
-            steps {
-                sh 'mvn -B clean'
-            }
-        }
-
         stage('Build and Test') {
             steps {
                 sh 'mvn -B install'
+            }
+
+            post {
+                always {
+                    junit '**/failsafe-reports/*.xml,**/surefire-reports/*.xml'
+                }
             }
         }
 
         stage('Sonarcloud') {
             steps {
-                withCredentials([string(credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f', variable: 'accessToken')]) {
-                    sh label: 'sonarcloud', script: "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.login=$accessToken"
+                withSonarQubeEnv(installationName: 'Sonarcloud', credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f') {
+                    sh label: 'sonarcloud', script: "mvn $SONAR_MAVEN_GOAL"
                 }
             }
         }
 
-        stage('Publish test results') {
+        stage("Check Dependencies") {
             steps {
-                junit '**/failsafe-reports/*.xml,**/surefire-reports/*.xml'
+                sh 'mvn -Psecurity-scan dependency-check:check'
+                dependencyCheckPublisher failedTotalCritical: 1, failedTotalHigh: 5, failedTotalLow: 8, failedTotalMedium: 8, pattern: 'target/dependency-check-report.xml', unstableTotalCritical: 0, unstableTotalHigh: 4, unstableTotalLow: 8, unstableTotalMedium: 8
             }
         }
 
