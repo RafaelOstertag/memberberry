@@ -2,129 +2,910 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: cron-utils-9.1.1.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.cronutils/cron\-utils@.*$</packageUrl>
+        <cve>CVE-2020-26238</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2016-8609</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2016-8629</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2017-12161</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2017-2582</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2017-2585</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2017-2646</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2018-10912</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2018-14637</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-10157</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-10169</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-10170</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-10199</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-10201</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-14820</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-14832</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-14837</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-3868</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: quarkus-keycloak-authorization-1.9.2.Final.jar
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
         <cve>CVE-2019-3875</cve>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2017-2646</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-core@.*$</packageUrl>
+        <cve>CVE-2020-10776</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-core@.*$</packageUrl>
+        <cve>CVE-2020-14366</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-core@.*$</packageUrl>
+        <cve>CVE-2020-14389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-core@.*$</packageUrl>
+        <cve>CVE-2020-1728</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: mutiny-0.11.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye\.reactive/mutiny@.*$</packageUrl>
+        <cve>CVE-2013-0136</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: mutiny-0.11.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye\.reactive/mutiny@.*$</packageUrl>
+        <cve>CVE-2018-15529</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: opencensus-contrib-grpc-util-0.24.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opencensus/opencensus\-contrib\-grpc\-util@.*$</packageUrl>
+        <cve>CVE-2017-7860</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: opencensus-contrib-grpc-util-0.24.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opencensus/opencensus\-contrib\-grpc\-util@.*$</packageUrl>
+        <cve>CVE-2017-7861</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: opencensus-contrib-grpc-util-0.24.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opencensus/opencensus\-contrib\-grpc\-util@.*$</packageUrl>
+        <cve>CVE-2017-8359</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: opencensus-contrib-grpc-util-0.24.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opencensus/opencensus\-contrib\-grpc\-util@.*$</packageUrl>
+        <cve>CVE-2017-9431</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-iam-v1-0.13.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-iam\-v1@.*$</packageUrl>
+        <cve>CVE-2017-7860</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-iam-v1-0.13.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-iam\-v1@.*$</packageUrl>
+        <cve>CVE-2017-7861</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-iam-v1-0.13.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-iam\-v1@.*$</packageUrl>
+        <cve>CVE-2017-8359</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-iam-v1-0.13.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-iam\-v1@.*$</packageUrl>
+        <cve>CVE-2017-9431</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-10758</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-10776</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-14366</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1694</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1697</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1698</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1714</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1718</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1724</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1727</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1728</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1744</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-1758</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-core@.*$</packageUrl>
+        <cve>CVE-2020-10776</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-core@.*$</packageUrl>
+        <cve>CVE-2020-14366</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-core@.*$</packageUrl>
+        <cve>CVE-2020-14389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-core-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-core@.*$</packageUrl>
+        <cve>CVE-2020-1728</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-common-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-common@.*$</packageUrl>
+        <cve>CVE-2020-10776</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-common-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-common@.*$</packageUrl>
+        <cve>CVE-2020-14366</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-common-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-common@.*$</packageUrl>
+        <cve>CVE-2020-14389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-common-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-common@.*$</packageUrl>
+        <cve>CVE-2020-1728</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-spi-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-spi@.*$</packageUrl>
+        <cve>CVE-2020-10776</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-spi-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-spi@.*$</packageUrl>
+        <cve>CVE-2020-14366</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-spi-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-spi@.*$</packageUrl>
+        <cve>CVE-2020-14389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-adapter-spi-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-spi@.*$</packageUrl>
+        <cve>CVE-2020-1728</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-authz-client-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-authz\-client@.*$</packageUrl>
+        <cve>CVE-2020-10776</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-authz-client-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-authz\-client@.*$</packageUrl>
+        <cve>CVE-2020-14366</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-authz-client-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-authz\-client@.*$</packageUrl>
+        <cve>CVE-2020-14389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: keycloak-authz-client-11.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-authz\-client@.*$</packageUrl>
+        <cve>CVE-2020-1728</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-cloud-firestore-v1beta1-0.88.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-cloud\-firestore\-v1beta1@.*$
+        </packageUrl>
+        <cve>CVE-2017-7860</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-cloud-firestore-v1beta1-0.88.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-cloud\-firestore\-v1beta1@.*$
+        </packageUrl>
+        <cve>CVE-2017-7861</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-cloud-firestore-v1beta1-0.88.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-cloud\-firestore\-v1beta1@.*$
+        </packageUrl>
+        <cve>CVE-2017-8359</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-cloud-firestore-v1beta1-0.88.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-cloud\-firestore\-v1beta1@.*$
+        </packageUrl>
+        <cve>CVE-2017-9431</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: mutiny-context-propagation-0.11.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye\.reactive/mutiny\-context\-propagation@.*$</packageUrl>
+        <cve>CVE-2013-0136</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: mutiny-context-propagation-0.11.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye\.reactive/mutiny\-context\-propagation@.*$</packageUrl>
+        <cve>CVE-2018-15529</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny\-common@.*$</packageUrl>
+        <cve>CVE-2012-0818</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny\-common@.*$</packageUrl>
+        <cve>CVE-2011-5245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny\-common@.*$</packageUrl>
+        <cve>CVE-2013-0136</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny\-common@.*$</packageUrl>
+        <cve>CVE-2016-9606</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny\-common@.*$</packageUrl>
+        <cve>CVE-2018-15529</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny\-common@.*$</packageUrl>
+        <cve>CVE-2020-25633</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-server-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-server\-common@.*$</packageUrl>
+        <cve>CVE-2011-5245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-server-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-server\-common@.*$</packageUrl>
+        <cve>CVE-2012-0818</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-server-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-server\-common@.*$</packageUrl>
+        <cve>CVE-2016-9606</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-server-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-server\-common@.*$</packageUrl>
+        <cve>CVE-2020-25633</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: bcprov-jdk15on-1.66.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
+        <cve>CVE-2020-28052</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: google-http-client-1.34.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.http\-client/google\-http\-client@.*$</packageUrl>
+        <cve>CVE-2020-13956</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: mutiny-reactive-streams-operators-0.11.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye\.reactive/mutiny\-reactive\-streams\-operators@.*$</packageUrl>
+        <cve>CVE-2013-0136</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: mutiny-reactive-streams-operators-0.11.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye\.reactive/mutiny\-reactive\-streams\-operators@.*$</packageUrl>
+        <cve>CVE-2018-15529</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy@.*$</packageUrl>
+        <cve>CVE-2011-5245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy@.*$</packageUrl>
+        <cve>CVE-2012-0818</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy@.*$</packageUrl>
+        <cve>CVE-2016-9606</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy@.*$</packageUrl>
+        <cve>CVE-2020-25633</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: undertow-core-2.0.23.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.undertow/undertow\-core@.*$</packageUrl>
+        <cve>CVE-2020-1745</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: undertow-servlet-2.0.23.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.undertow/undertow\-servlet@.*$</packageUrl>
+        <cve>CVE-2020-1745</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: opencensus-contrib-grpc-util-0.24.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opencensus/opencensus\-contrib\-grpc\-util@.*$</packageUrl>
+        <cve>CVE-2020-7768</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-cloud-firestore-v1beta1-0.88.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-cloud\-firestore\-v1beta1@.*$
+        </packageUrl>
+        <cve>CVE-2020-7768</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: proto-google-iam-v1-0.13.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.api\.grpc/proto\-google\-iam\-v1@.*$</packageUrl>
+        <cve>CVE-2020-7768</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-keycloak-authorization-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-keycloak\-authorization@.*$</packageUrl>
+        <cve>CVE-2020-14389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-mutiny-reactive-streams-operators-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-mutiny\-reactive\-streams\-operators@.*$</packageUrl>
+        <cve>CVE-2013-0136</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-mutiny-reactive-streams-operators-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-mutiny\-reactive\-streams\-operators@.*$</packageUrl>
+        <cve>CVE-2018-15529</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-oidc-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-oidc@.*$</packageUrl>
+        <cve>CVE-2007-1651</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-oidc-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-oidc@.*$</packageUrl>
+        <cve>CVE-2007-1652</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-common@.*$</packageUrl>
+        <cve>CVE-2011-5245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-common@.*$</packageUrl>
+        <cve>CVE-2012-0818</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-common@.*$</packageUrl>
+        <cve>CVE-2016-9606</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-common-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-common@.*$</packageUrl>
+        <cve>CVE-2020-25633</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny@.*$</packageUrl>
+        <cve>CVE-2011-5245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny@.*$</packageUrl>
+        <cve>CVE-2012-0818</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny@.*$</packageUrl>
+        <cve>CVE-2016-9606</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-mutiny-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-mutiny@.*$</packageUrl>
+        <cve>CVE-2020-25633</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-jackson-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-jackson@.*$</packageUrl>
+        <cve>CVE-2011-5245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-jackson-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-jackson@.*$</packageUrl>
+        <cve>CVE-2012-0818</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-jackson-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-jackson@.*$</packageUrl>
+        <cve>CVE-2016-9606</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-resteasy-jackson-1.10.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-resteasy\-jackson@.*$</packageUrl>
+        <cve>CVE-2020-25633</cve>
+    </suppress>
 </suppressions>
