@@ -28,6 +28,7 @@ pipeline {
             post {
                 always {
                     junit '**/failsafe-reports/*.xml,**/surefire-reports/*.xml'
+                    jacoco()
                 }
             }
         }
