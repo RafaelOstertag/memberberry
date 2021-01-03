@@ -27,7 +27,7 @@
 
         <quarkus.platform.version>1.10.5.Final</quarkus.platform.version>
         <testcontainers.version>1.15.1</testcontainers.version>
-        <mockk.version>1.10.4</mockk.version>
+        <mockk.version>1.10.2</mockk.version>
         <firebase-admin.version>7.1.0</firebase-admin.version>
 
         <!-- Sonar -->
