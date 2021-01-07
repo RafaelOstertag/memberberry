@@ -28,6 +28,7 @@ pipeline {
             post {
                 always {
                     junit '**/failsafe-reports/*.xml,**/surefire-reports/*.xml'
+                    jacoco()
                 }
             }
         }
@@ -35,7 +36,15 @@ pipeline {
         stage('Sonarcloud') {
             steps {
                 withSonarQubeEnv(installationName: 'Sonarcloud', credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f') {
-                    sh label: 'sonarcloud', script: "mvn $SONAR_MAVEN_GOAL"
+                    sh label: 'sonarcloud', script: "mvn -Dsonar.branch.name=${env.BRANCH_NAME} $SONAR_MAVEN_GOAL"
+                }
+            }
+        }
+
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 30, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -109,11 +118,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to k8s') {
-            agent {
-                label "helm"
-            }
-
+        stage('Trigger k8s deployment') {
             environment {
                 VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
             }
@@ -126,9 +131,7 @@ pipeline {
             }
 
             steps {
-                withKubeConfig(credentialsId: 'a9fe556b-01b0-4354-9a65-616baccf9cac') {
-                    sh "helm upgrade -n memberberry -i --set image.tag=${env.VERSION} memberberry helm/memberberry"
-                }
+                build wait: false, job: '../Helm/memberberry', parameters: [string(name: 'VERSION', value: env.VERSION)]
             }
         }
     }
