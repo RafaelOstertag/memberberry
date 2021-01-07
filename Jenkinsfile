@@ -118,11 +118,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to k8s') {
-            agent {
-                label "helm"
-            }
-
+        stage('Trigger k8s deployment') {
             environment {
                 VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
             }
@@ -135,9 +131,7 @@ pipeline {
             }
 
             steps {
-                withKubeConfig(credentialsId: 'a9fe556b-01b0-4354-9a65-616baccf9cac') {
-                    sh "helm upgrade -n memberberry -i --set image.tag=${env.VERSION} memberberry helm/memberberry"
-                }
+                build wait: false, job: '../Helm/memberberry', parameters: [string(name: 'VERSION', value: env.VERSION)]
             }
         }
     }
