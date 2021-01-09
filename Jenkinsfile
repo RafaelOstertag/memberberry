@@ -23,7 +23,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" install'
+                    sh 'mvn -s "$MAVEN_SETTINGS_XML" install'
                 }
             }
 
@@ -72,7 +72,7 @@ pipeline {
 
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -DskipTests deploy'
+                    sh 'mvn -s "$MAVEN_SETTINGS_XML" -DskipTests deploy'
                 }
             }
         }
@@ -106,7 +106,7 @@ pipeline {
             }
 
             environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
             }
 
             when {
@@ -130,7 +130,7 @@ pipeline {
 
         stage('Trigger k8s deployment') {
             environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
             }
 
             when {
