@@ -23,7 +23,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -s "$MAVEN_SETTINGS_XML" install'
+                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" install'
                 }
             }
 
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
                     withSonarQubeEnv(installationName: 'Sonarcloud', credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f') {
-                        sh label: 'sonarcloud', script: "mvn -s \"$MAVEN_SETTINGS_XML\" -Dsonar.branch.name=${env.BRANCH_NAME} $SONAR_MAVEN_GOAL"
+                        sh label: 'sonarcloud', script: "mvn -B -s \"$MAVEN_SETTINGS_XML\" -Dsonar.branch.name=${env.BRANCH_NAME} $SONAR_MAVEN_GOAL"
                     }
                 }
             }
@@ -56,7 +56,7 @@ pipeline {
         stage("Check Dependencies") {
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -s "$MAVEN_SETTINGS_XML" -Psecurity-scan dependency-check:check'
+                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -Psecurity-scan dependency-check:check'
                 }
                 dependencyCheckPublisher failedTotalCritical: 1, failedTotalHigh: 5, failedTotalLow: 8, failedTotalMedium: 8, pattern: 'target/dependency-check-report.xml', unstableTotalCritical: 0, unstableTotalHigh: 4, unstableTotalLow: 8, unstableTotalMedium: 8
             }
@@ -72,7 +72,7 @@ pipeline {
 
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -s "$MAVEN_SETTINGS_XML" -DskipTests deploy'
+                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -DskipTests deploy'
                 }
             }
         }
@@ -90,7 +90,7 @@ pipeline {
 
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh "mvn -s \"$MAVEN_SETTINGS_XML\" clean package -DskipTests -Dquarkus.package.type=fast-jar"
+                    sh "mvn -B -s \"$MAVEN_SETTINGS_XML\" clean package -DskipTests -Dquarkus.package.type=fast-jar"
                 }
                 sh "docker build -t rafaelostertag/memberberry:latest -f src/main/docker/Dockerfile.fast-jar ."
                 withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
@@ -106,7 +106,7 @@ pipeline {
             }
 
             environment {
-                VERSION = sh returnStdout: true, script: "mvn help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
             }
 
             when {
@@ -118,7 +118,7 @@ pipeline {
 
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh "mvn -s \"$MAVEN_SETTINGS_XML\" clean package -DskipTests -Dquarkus.package.type=fast-jar"
+                    sh "mvn -B -s \"$MAVEN_SETTINGS_XML\" clean package -DskipTests -Dquarkus.package.type=fast-jar"
                 }
                 sh "docker build -t rafaelostertag/memberberry:${env.VERSION} -f src/main/docker/Dockerfile.fast-jar ."
                 withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
@@ -130,7 +130,7 @@ pipeline {
 
         stage('Trigger k8s deployment') {
             environment {
-                VERSION = sh returnStdout: true, script: "mvn help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
             }
 
             when {
