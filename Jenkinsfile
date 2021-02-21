@@ -72,7 +72,7 @@ pipeline {
 
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -DskipTests deploy'
+                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -DskipTests -Dquarkus.package.type=uber-jar deploy'
                 }
             }
         }

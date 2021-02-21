@@ -147,4 +147,19 @@
     <suppress>
         <cve>CVE-2020-7768</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2021-21290</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2021-21290</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2020-10770</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2020-14302</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2020-1725</cve>
+    </suppress>
 </suppressions>

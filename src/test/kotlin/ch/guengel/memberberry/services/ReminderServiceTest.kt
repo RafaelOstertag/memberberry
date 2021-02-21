@@ -45,20 +45,14 @@ internal class ReminderServiceTest {
             lastExecutionDate
         )
 
-        every { berryRepository.findBerriesDueBy(any()) }.answers {
-            Multi
-                .createFrom()
-                .item(berry)
-        }
+        every { berryRepository.findBerriesDueBy(any()) } returns Multi.createFrom().item(berry)
         every {
             executionCalculatorService.calculateNextExecution(
                 RememberPeriod.DAILY,
                 any()
             )
-        }.answers { nextExecutionDate.plusDays(1) }
-        every {
-            reminderStrategy.remind(berry)
-        }.answers { }
+        } returns nextExecutionDate.plusDays(1)
+        every { reminderStrategy.remind(berry) } returns Unit
 
         val captureSlot = slot<Berry>()
         every { berryRepository.update(capture(captureSlot)) }.answers { Uni.createFrom().item(1L) }
@@ -90,25 +84,21 @@ internal class ReminderServiceTest {
             lastExecutionDate
         )
 
-        every { berryRepository.findBerriesDueBy(any()) }.answers {
-            Multi
-                .createFrom()
-                .items(berry, berry, berry)
-        }
+        every { berryRepository.findBerriesDueBy(any()) } returns Multi.createFrom().items(berry, berry, berry)
         every {
             executionCalculatorService.calculateNextExecution(
                 RememberPeriod.DAILY,
                 any()
             )
-        }.answers { nextExecutionDate.plusDays(1) }
+        } returns nextExecutionDate.plusDays(1)
         every {
             reminderStrategy.remind(berry)
         }
-            .answers { }
-            .andThen { throw RuntimeException("Test exception") }
-            .andThen { }
+            .answers {}
+            .andThenThrows(RuntimeException("Test exception"))
+            .andThenAnswer {}
 
-        every { berryRepository.update(any()) }.answers { Uni.createFrom().item(1L) }
+        every { berryRepository.update(any()) } returns Uni.createFrom().item(1L)
 
         reminderService.remind()
 
