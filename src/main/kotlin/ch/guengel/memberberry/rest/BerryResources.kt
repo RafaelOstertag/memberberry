@@ -27,7 +27,7 @@ class BerryResources(@Inject private val berryService: BerryService) {
 
     @GET
     @Path("{id}")
-    fun getBerry(@PathParam("id") id: String, @Context securityContext: SecurityContext) = berryService
+    fun getBerry(@PathParam("id") id: String, @Context securityContext: SecurityContext): Uni<Response> = berryService
         .find(id, securityContext.toPermissions())
         .onItem().ifNotNull().transform { Response.ok(it) }
         .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
@@ -51,7 +51,7 @@ class BerryResources(@Inject private val berryService: BerryService) {
         @Valid createUpdateBerry: CreateUpdateBerry
     ): Uni<Response> =
         berryService.update(id, createUpdateBerry, securityContext.toPermissions())
-            .onItem().ifNotNull().transform { result -> if (result == 0L) throw BerryUpdateException() else result }
+            .onItem().ifNotNull().transform { result -> if (result == 0L) null else result }
             .onItem().ifNotNull().transform { Response.noContent() }
             .onItem().ifNull().continueWith { Response.status(Response.Status.NOT_FOUND) }
             .onFailure().recoverWithItem { -> Response.status(Response.Status.BAD_REQUEST) }
@@ -68,5 +68,3 @@ class BerryResources(@Inject private val berryService: BerryService) {
 
     private fun SecurityContext.toPermissions() = Permissions(this.userPrincipal.name, this.isUserInRole("admin"))
 }
-
-class BerryUpdateException : RuntimeException()
