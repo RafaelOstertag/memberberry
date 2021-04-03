@@ -192,4 +192,10 @@
     <suppress>
         <cve>CVE-2020-25649</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2021-21295</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2021-20289</cve>
+    </suppress>
 </suppressions>
