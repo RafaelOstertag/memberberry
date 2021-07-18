@@ -72,7 +72,7 @@ pipeline {
 
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -DskipTests -Dquarkus.package.type=uber-jar deploy'
+                    sh 'mvn -B -s "$MAVEN_SETTINGS_XML" -DskipTests -Dquarkus.package.type=uber-jar clean deploy'
                 }
             }
         }
@@ -89,14 +89,7 @@ pipeline {
             }
 
             steps {
-                configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh "mvn -B -s \"$MAVEN_SETTINGS_XML\" clean package -DskipTests -Dquarkus.package.type=fast-jar"
-                }
-                sh "docker build -t rafaelostertag/memberberry:latest -f src/main/docker/Dockerfile.fast-jar ."
-                withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
-                    sh "docker push rafaelostertag/memberberry:latest"
-                }
+                buildDockerImage("latest")
             }
         }
 
@@ -117,14 +110,7 @@ pipeline {
             }
 
             steps {
-                configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh "mvn -B -s \"$MAVEN_SETTINGS_XML\" clean package -DskipTests -Dquarkus.package.type=fast-jar"
-                }
-                sh "docker build -t rafaelostertag/memberberry:${env.VERSION} -f src/main/docker/Dockerfile.fast-jar ."
-                withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
-                    sh "docker push rafaelostertag/memberberry:${env.VERSION}"
-                }
+                buildDockerImage(env.VERSION)
             }
         }
 
@@ -151,6 +137,28 @@ pipeline {
             mail to: "rafi@guengel.ch",
                     subject: "${JOB_NAME} (${BRANCH_NAME};${env.BUILD_DISPLAY_NAME}) -- ${currentBuild.currentResult}",
                     body: "Refer to ${currentBuild.absoluteUrl}"
+        }
+    }
+}
+
+def buildDockerImage(String tag) {
+    withEnv(['IMAGE_TAG='+tag]) {
+        withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+            sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
+            configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
+                sh '''mvn -B \
+                    -s "${MAVEN_SETTINGS_XML}" \\
+                    clean \\
+                    package \\
+                    -DskipTests \\
+                    -Dquarkus.container-image.build=true \\
+                    -Dquarkus.container-image.tag="${IMAGE_TAG}" \\
+                    -Dquarkus.container-image.group=rafaelostertag \\
+                    -Dquarkus.container-image.push=true \\
+                    -Dquarkus.container-image.username="${USERNAME}" \\
+                    -Dquarkus.container-image.password="${PASSWORD}"
+                    '''
+            }
         }
     }
 }
