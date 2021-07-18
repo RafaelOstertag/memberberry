@@ -8,27 +8,27 @@
     <version>1.0.16-SNAPSHOT</version>
 
     <properties>
+        <kotlin.code.style>official</kotlin.code.style>
+
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <quarkus.platform.version>2.0.2.Final</quarkus.platform.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
-        <dependency-check-maven.version>6.1.5</dependency-check-maven.version>
+        <dependency-check-maven.version>6.2.2</dependency-check-maven.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <quarkus-plugin.version>1.13.0.Final</quarkus-plugin.version>
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
 
-        <kotlin.version>1.4.31</kotlin.version>
+        <kotlin.version>1.4.32</kotlin.version>
 
-        <quarkus.platform.version>1.13.0.Final</quarkus.platform.version>
-
-        <testcontainers.version>1.15.2</testcontainers.version>
-        <mockk.version>1.11.0</mockk.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
+        <mockk.version>1.12.0</mockk.version>
         <firebase-admin.version>7.1.1</firebase-admin.version>
 
         <!-- Sonar -->
@@ -54,11 +54,6 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk7</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
@@ -89,30 +84,25 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-mongodb-client</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-reactive</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-health</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-micrometer</artifactId>
+            <artifactId>quarkus-smallrye-metrics</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-docker</artifactId>
         </dependency>
 
         <dependency>
@@ -188,7 +178,7 @@
             <plugin>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
-                <version>${quarkus-plugin.version}</version>
+                <version>${quarkus.platform.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -297,7 +287,7 @@
     <distributionManagement>
         <repository>
             <id>memberberry-maven</id>
-            <name>Funnel Maven Repository</name>
+            <name>Memberberry Maven Repository</name>
             <url>https://colossus.kruemel.home/nexus/repository/memberberry/</url>
         </repository>
     </distributionManagement>
