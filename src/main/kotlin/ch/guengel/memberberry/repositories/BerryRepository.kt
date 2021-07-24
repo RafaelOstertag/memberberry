@@ -102,6 +102,7 @@ class OffsetDateTimeCodec : Codec<OffsetDateTime> {
 }
 
 class OffsetDateTimeCodecProvider : CodecProvider {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Any?> get(clazz: Class<T>?, registry: CodecRegistry?): Codec<T>? =
         if (clazz == OffsetDateTime::class.java) {
             OffsetDateTimeCodec() as Codec<T>
