@@ -113,7 +113,7 @@ internal class BerryResourcesTest {
     fun getNonExistingBerryAuthenticatedAsUser() {
         every { berryService.find(any(), any()) } returns Uni.createFrom().item { null }
 
-        val result = given()
+        given()
             .`when`().get("/v1/berries/{berry}", "must-not-exist")
             .then()
             .statusCode(404)
@@ -124,7 +124,7 @@ internal class BerryResourcesTest {
     fun exceptionWhileGettingBerryAuthenticatedAsUser() {
         every { berryService.find(any(), any()) } returns Uni.createFrom().item { throw RuntimeException() }
 
-        val result = given()
+        given()
             .`when`().get("/v1/berries/{berry}", "must-not-exist")
             .then()
             .statusCode(400)

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel</groupId>
     <artifactId>memberberry</artifactId>
-    <version>1.0.16</version>
+    <version>1.0.17-SNAPSHOT</version>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <quarkus.platform.version>2.0.2.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.1.0.Final</quarkus.platform.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
@@ -25,9 +25,9 @@
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
 
-        <kotlin.version>1.4.32</kotlin.version>
+        <kotlin.version>1.5.21</kotlin.version>
 
-        <testcontainers.version>1.15.3</testcontainers.version>
+        <testcontainers.version>1.16.0</testcontainers.version>
         <mockk.version>1.12.0</mockk.version>
         <firebase-admin.version>7.1.1</firebase-admin.version>
 
