@@ -27,7 +27,7 @@
 
         <kotlin.version>1.5.21</kotlin.version>
 
-        <testcontainers.version>1.16.0</testcontainers.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
         <mockk.version>1.12.0</mockk.version>
         <firebase-admin.version>7.1.1</firebase-admin.version>
 
