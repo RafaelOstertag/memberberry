@@ -27,12 +27,13 @@ private const val ID_FIELD = "_id"
 
 @ApplicationScoped
 class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
-    private val collection: ReactiveMongoCollection<Berry> = reactiveMongoClient
-        .getDatabase("memberberry")
-        .getCollection("berry", Berry::class.java)
+    private lateinit var collection: ReactiveMongoCollection<Berry>
 
     @PostConstruct
     private fun createIndex() {
+        collection = reactiveMongoClient
+            .getDatabase("memberberry")
+            .getCollection("berry", Berry::class.java)
         collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
         collection.createIndex(Indexes.ascending("nextExecution")).await().indefinitely()
     }
