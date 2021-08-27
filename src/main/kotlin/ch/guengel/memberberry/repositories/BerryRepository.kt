@@ -33,8 +33,8 @@ class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClie
 
     @PostConstruct
     private fun createIndex() {
-        collection.createIndex(Indexes.ascending("userId"))
-        collection.createIndex(Indexes.ascending("nextExecution"))
+        collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
+        collection.createIndex(Indexes.ascending("nextExecution")).await().indefinitely()
     }
 
     fun findBerry(id: UUID): Uni<Berry?> = collection
