@@ -10,14 +10,20 @@ import io.quarkus.mongodb.reactive.ReactiveMongoClient
 import io.quarkus.mongodb.reactive.ReactiveMongoCollection
 import io.smallrye.mutiny.Uni
 import org.bson.Document
+import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 @ApplicationScoped
 class FCMTokenRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
-    private val collection: ReactiveMongoCollection<Document> = reactiveMongoClient
-        .getDatabase("memberberry")
-        .getCollection("fcmtoken")
+    private lateinit var collection: ReactiveMongoCollection<Document>
+
+    @PostConstruct
+    fun postConstruct() {
+        collection = reactiveMongoClient
+            .getDatabase("memberberry")
+            .getCollection("fcmtoken")
+    }
 
     fun findTokensForUser(userId: String): Uni<FCMToken?> = collection
         .find(eq("_id", userId))
