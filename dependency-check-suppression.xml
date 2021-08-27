@@ -231,4 +231,10 @@
     <suppress>
         <cve>CVE-2021-20291</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2019-10219</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2021-28170</cve>
+    </suppress>
 </suppressions>
