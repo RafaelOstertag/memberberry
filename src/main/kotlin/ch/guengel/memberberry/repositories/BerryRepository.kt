@@ -5,7 +5,6 @@ import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters.*
 import com.mongodb.client.model.Indexes
 import io.quarkus.mongodb.reactive.ReactiveMongoClient
-import io.quarkus.mongodb.reactive.ReactiveMongoCollection
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.bson.*
@@ -27,13 +26,11 @@ private const val ID_FIELD = "_id"
 
 @ApplicationScoped
 class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
-    private lateinit var collection: ReactiveMongoCollection<Berry>
+    private val collection
+        get() = reactiveMongoClient.getDatabase("memberberry").getCollection("berry", Berry::class.java)
 
     @PostConstruct
     private fun createIndex() {
-        collection = reactiveMongoClient
-            .getDatabase("memberberry")
-            .getCollection("berry", Berry::class.java)
         collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
         collection.createIndex(Indexes.ascending("nextExecution")).await().indefinitely()
     }
