@@ -77,10 +77,50 @@ pipeline {
             }
         }
 
-        stage('Build & Push Development Docker Image') {
-            agent {
-               label "arm64&&docker&&kotlin"
+        stage('Build Development Docker Image') {
+            when {
+                branch 'develop'
+                not {
+                    triggeredBy "TimerTrigger"
+                }
             }
+
+            parallel {
+                stage('ARM64') {
+                    agent {
+                        label "arm64&&docker&&kotlin"
+                    }
+                    when {
+                        branch 'develop'
+                        not {
+                            triggeredBy "TimerTrigger"
+                        }
+                    }
+
+                    steps {
+                        buildDockerImage("latest-arm64")
+                    }
+                }
+
+                stage('AMD64') {
+                    agent {
+                        label "amd64&&docker&&kotlin"
+                    }
+                    when {
+                        branch 'develop'
+                        not {
+                            triggeredBy "TimerTrigger"
+                        }
+                    }
+
+                    steps {
+                        buildDockerImage("latest-amd64")
+                    }
+                }
+            }
+        }
+
+        stage('Build Development Multi Arch Docker Manifest') {
             when {
                 branch 'develop'
                 not {
@@ -89,19 +129,11 @@ pipeline {
             }
 
             steps {
-                buildDockerImage("latest")
+                buildMultiArchManifest("latest")
             }
         }
 
-        stage('Build & Push Release Docker Image') {
-            agent {
-                label "arm64&&docker&&kotlin"
-            }
-
-            environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
-            }
-
+        stage('Build Release Docker Image') {
             when {
                 branch 'master'
                 not {
@@ -109,8 +141,54 @@ pipeline {
                 }
             }
 
+            parallel {
+                stage('AMD64') {
+                    agent {
+                        label "amd64&&docker&&kotlin"
+                    }
+
+                    environment {
+                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                    }
+
+
+                    steps {
+                        buildDockerImage(env.VERSION + "-amd64")
+                    }
+                }
+
+                stage('ARM64') {
+                    agent {
+                        label "arm64&&docker&&kotlin"
+                    }
+
+                    environment {
+                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                    }
+
+
+                    steps {
+                        buildDockerImage(env.VERSION + "-arm64")
+                    }
+                }
+            }
+
+        }
+
+        stage('Build Production Multi Arch Docker Manifest') {
+            when {
+                branch 'master'
+                not {
+                    triggeredBy "TimerTrigger"
+                }
+            }
+
+            environment {
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+            }
+
             steps {
-                buildDockerImage(env.VERSION)
+                buildMultiArchManifest(env.VERSION)
             }
         }
 
@@ -159,6 +237,16 @@ def buildDockerImage(String tag) {
                     -Dquarkus.container-image.password="${PASSWORD}"
                     '''
             }
+        }
+    }
+}
+
+def buildMultiArchManifest(String tag) {
+    withEnv(['IMAGE_TAG='+tag]) {
+        withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+            sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
+            sh 'docker manifest create "rafaelostertag/memberberry:${IMAGE_TAG}" --amend "rafaelostertag/memberberry:${IMAGE_TAG}-amd64" --amend "rafaelostertag/memberberry:${IMAGE_TAG}-arm64"'
+            sh 'docker manifest push --purge "rafaelostertag/memberberry:${IMAGE_TAG}"'
         }
     }
 }
