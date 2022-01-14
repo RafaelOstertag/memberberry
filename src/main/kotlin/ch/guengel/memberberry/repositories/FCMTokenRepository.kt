@@ -7,16 +7,23 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
 import io.quarkus.mongodb.reactive.ReactiveMongoClient
+import io.quarkus.mongodb.reactive.ReactiveMongoCollection
 import io.smallrye.mutiny.Uni
+import org.bson.Document
+import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 @ApplicationScoped
 class FCMTokenRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
-    private val collection
-        get() = reactiveMongoClient
+    private lateinit var collection: ReactiveMongoCollection<Document>
+
+    @PostConstruct
+    private fun postConstruct() {
+        collection = reactiveMongoClient
             .getDatabase("memberberry")
             .getCollection("fcmtoken")
+    }
 
     fun findTokensForUser(userId: String): Uni<FCMToken?> = collection
         .find(eq("_id", userId))

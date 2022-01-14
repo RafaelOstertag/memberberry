@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel</groupId>
     <artifactId>memberberry</artifactId>
-    <version>1.0.22</version>
+    <version>1.0.23-SNAPSHOT</version>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
@@ -20,7 +20,7 @@
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
-        <dependency-check-maven.version>6.2.2</dependency-check-maven.version>
+        <dependency-check-maven.version>6.5.3</dependency-check-maven.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
