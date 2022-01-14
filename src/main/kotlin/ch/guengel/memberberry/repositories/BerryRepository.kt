@@ -5,8 +5,12 @@ import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters.*
 import com.mongodb.client.model.Indexes
 import io.quarkus.mongodb.reactive.ReactiveMongoClient
+import io.quarkus.mongodb.reactive.ReactiveMongoCollection
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.bson.*
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
@@ -26,19 +30,21 @@ private const val ID_FIELD = "_id"
 
 @ApplicationScoped
 class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
-    private val collection
-        get() = reactiveMongoClient.getDatabase("memberberry").getCollection("berry", Berry::class.java)
+    private lateinit var collection: ReactiveMongoCollection<Berry>
 
     @PostConstruct
     private fun createIndex() {
-        collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
-        collection.createIndex(Indexes.ascending("nextExecution")).await().indefinitely()
+        collection = reactiveMongoClient.getDatabase("memberberry").getCollection("berry", Berry::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
+            collection.createIndex(Indexes.ascending("nextExecution")).await().indefinitely()
+        }
     }
 
     fun findBerry(id: UUID): Uni<Berry?> = collection
         .find(eq(ID_FIELD, id))
         .toUni()
-
+ 
     fun findBerryByIdAndUserId(id: UUID, userId: String): Uni<Berry?> = collection
         .find(and(eq(ID_FIELD, id), eq("userId", userId)))
         .toUni()
