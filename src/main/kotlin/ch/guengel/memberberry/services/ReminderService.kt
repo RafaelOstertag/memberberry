@@ -6,13 +6,12 @@ import io.quarkus.scheduler.Scheduled
 import org.jboss.logging.Logger
 import java.time.OffsetDateTime
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
 class ReminderService(
-    @Inject private val berryRepository: BerryRepository,
-    @Inject private val reminderStrategy: ReminderStrategy,
-    @Inject private val executionCalculatorService: ExecutionCalculatorService
+    private val berryRepository: BerryRepository,
+    private val reminderStrategy: ReminderStrategy,
+    private val executionCalculatorService: ExecutionCalculatorService
 ) {
 
     @Scheduled(cron = "{memberberry.reminder.cron}")

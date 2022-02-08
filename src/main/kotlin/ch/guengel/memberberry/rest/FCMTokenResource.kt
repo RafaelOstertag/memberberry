@@ -4,7 +4,6 @@ import ch.guengel.memberberry.dto.CreateUpdateFCMToken
 import ch.guengel.memberberry.services.FCMTokenService
 import io.quarkus.security.Authenticated
 import io.smallrye.mutiny.Uni
-import javax.inject.Inject
 import javax.validation.Valid
 import javax.ws.rs.GET
 import javax.ws.rs.PUT
@@ -18,7 +17,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/v1/me/fcm-token")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
-class FCMTokenResource(@Inject private val fcmTokenService: FCMTokenService) {
+class FCMTokenResource(private val fcmTokenService: FCMTokenService) {
     @PUT
     fun createOrUpdateFCMToken(
         @Context securityContext: SecurityContext,
