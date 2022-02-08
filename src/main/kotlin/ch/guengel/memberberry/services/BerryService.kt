@@ -9,12 +9,9 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
-class BerryService(
-    @Inject private val berryRepository: BerryRepository
-) {
+class BerryService(private val berryRepository: BerryRepository) {
 
     fun find(berryId: String, permissions: Permissions): Uni<Berry?> = berryRepository
         .findBerry(UUID.fromString(berryId))

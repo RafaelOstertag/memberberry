@@ -8,7 +8,6 @@ import io.quarkus.security.Authenticated
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import java.net.URI
-import javax.inject.Inject
 import javax.validation.Valid
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
@@ -19,7 +18,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/v1/berries")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
-class BerryResources(@Inject private val berryService: BerryService) {
+class BerryResources(private val berryService: BerryService) {
 
     @GET
     fun getBerries(@Context securityContext: SecurityContext): Multi<Berry> =

@@ -4,12 +4,11 @@ import ch.guengel.memberberry.domain.Berry
 import ch.guengel.memberberry.google.CloudMessaging
 import ch.guengel.memberberry.repositories.FCMTokenRepository
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
 class FCMReminder(
-    @Inject private val fcmTokenRepository: FCMTokenRepository,
-    @Inject private val cloudMessaging: CloudMessaging
+    private val fcmTokenRepository: FCMTokenRepository,
+    private val cloudMessaging: CloudMessaging
 ) : ReminderStrategy {
     override fun remind(berry: Berry) {
         fcmTokenRepository.findTokensForUser(berry.userId)

@@ -12,14 +12,13 @@ import io.smallrye.mutiny.Uni
 import org.bson.Document
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
-class FCMTokenRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
+class FCMTokenRepository(private val reactiveMongoClient: ReactiveMongoClient) {
     private lateinit var collection: ReactiveMongoCollection<Document>
 
     @PostConstruct
-    private fun postConstruct() {
+    internal fun postConstruct() {
         collection = reactiveMongoClient
             .getDatabase("memberberry")
             .getCollection("fcmtoken")

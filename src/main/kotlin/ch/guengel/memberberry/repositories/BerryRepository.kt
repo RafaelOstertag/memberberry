@@ -24,16 +24,15 @@ import java.time.ZoneId
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 private const val ID_FIELD = "_id"
 
 @ApplicationScoped
-class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClient) {
+class BerryRepository(private val reactiveMongoClient: ReactiveMongoClient) {
     private lateinit var collection: ReactiveMongoCollection<Berry>
 
     @PostConstruct
-    private fun createIndex() {
+    internal fun createIndex() {
         collection = reactiveMongoClient.getDatabase("memberberry").getCollection("berry", Berry::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
@@ -44,7 +43,7 @@ class BerryRepository(@Inject private val reactiveMongoClient: ReactiveMongoClie
     fun findBerry(id: UUID): Uni<Berry?> = collection
         .find(eq(ID_FIELD, id))
         .toUni()
- 
+
     fun findBerryByIdAndUserId(id: UUID, userId: String): Uni<Berry?> = collection
         .find(and(eq(ID_FIELD, id), eq("userId", userId)))
         .toUni()

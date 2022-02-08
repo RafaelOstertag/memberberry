@@ -5,10 +5,9 @@ import ch.guengel.memberberry.dto.CreateUpdateFCMToken
 import ch.guengel.memberberry.repositories.FCMTokenRepository
 import io.smallrye.mutiny.Uni
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
-class FCMTokenService(@Inject private val fcmTokenRepository: FCMTokenRepository) {
+class FCMTokenService(private val fcmTokenRepository: FCMTokenRepository) {
 
     fun createOrUpdateToken(createUpdateFCMToken: CreateUpdateFCMToken, userId: String): Uni<Unit> = Uni
         .createFrom()
