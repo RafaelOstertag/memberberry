@@ -29,22 +29,23 @@ private const val ID_FIELD = "_id"
 
 @ApplicationScoped
 class BerryRepository(private val reactiveMongoClient: ReactiveMongoClient) {
-    private lateinit var collection: ReactiveMongoCollection<Berry>
+    private fun ReactiveMongoClient.getBerryCollection(): ReactiveMongoCollection<Berry> =
+        getDatabase("memberberry").getCollection("berry", Berry::class.java)
 
     @PostConstruct
     internal fun createIndex() {
-        collection = reactiveMongoClient.getDatabase("memberberry").getCollection("berry", Berry::class.java)
         CoroutineScope(Dispatchers.IO).launch {
-            collection.createIndex(Indexes.ascending("userId")).await().indefinitely()
-            collection.createIndex(Indexes.ascending("nextExecution")).await().indefinitely()
+            reactiveMongoClient.getBerryCollection().createIndex(Indexes.ascending("userId")).await().indefinitely()
+            reactiveMongoClient.getBerryCollection().createIndex(Indexes.ascending("nextExecution")).await()
+                .indefinitely()
         }
     }
 
-    fun findBerry(id: UUID): Uni<Berry?> = collection
+    fun findBerry(id: UUID): Uni<Berry?> = reactiveMongoClient.getBerryCollection()
         .find(eq(ID_FIELD, id))
         .toUni()
 
-    fun findBerryByIdAndUserId(id: UUID, userId: String): Uni<Berry?> = collection
+    fun findBerryByIdAndUserId(id: UUID, userId: String): Uni<Berry?> = reactiveMongoClient.getBerryCollection()
         .find(and(eq(ID_FIELD, id), eq("userId", userId)))
         .toUni()
 
@@ -53,34 +54,33 @@ class BerryRepository(private val reactiveMongoClient: ReactiveMongoClient) {
         .onItem().transform { it -> it.atZoneSameInstant(ZoneId.of("UTC")) }
         .onItem().transform { it -> it.toOffsetDateTime() }
         .onItem().transformToMulti { it ->
-            collection.find(lte("nextExecution", it))
+            reactiveMongoClient.getBerryCollection().find(lte("nextExecution", it))
         }
 
-    fun deleteBerryById(id: UUID): Uni<Long> = collection
+    fun deleteBerryById(id: UUID): Uni<Long> = reactiveMongoClient.getBerryCollection()
         .deleteOne(eq(ID_FIELD, id))
         .onItem()
         .transform {
             it.deletedCount
         }
 
-    fun update(berry: Berry): Uni<Long> = collection.replaceOne(eq(ID_FIELD, berry.id), berry)
-        .onItem()
-        .transform { it.modifiedCount }
-
-    fun create(berry: Berry): Uni<UUID> {
-        return collection
-            .insertOne(berry)
+    fun update(berry: Berry): Uni<Long> =
+        reactiveMongoClient.getBerryCollection().replaceOne(eq(ID_FIELD, berry.id), berry)
             .onItem()
-            .transform {
-                it.insertedId?.asBinary()?.asUUID() ?: throw IllegalStateException("Cannot get ID of Berry")
-            }
-    }
+            .transform { it.modifiedCount }
 
-    fun getAll(): Multi<Berry> = collection.find()
+    fun create(berry: Berry): Uni<UUID> = reactiveMongoClient.getBerryCollection()
+        .insertOne(berry)
+        .onItem()
+        .transform {
+            it.insertedId?.asBinary()?.asUUID() ?: throw IllegalStateException("Cannot get ID of Berry")
+        }
 
-    fun getAll(userId: String): Multi<Berry> = collection.find(eq("userId", userId))
+    fun getAll(): Multi<Berry> = reactiveMongoClient.getBerryCollection().find()
 
-    fun deleteAll(): Uni<Long> = collection
+    fun getAll(userId: String): Multi<Berry> = reactiveMongoClient.getBerryCollection().find(eq("userId", userId))
+
+    fun deleteAll(): Uni<Long> = reactiveMongoClient.getBerryCollection()
         .deleteMany(BasicDBObject())
         .onItem()
         .transform { it.deletedCount }
