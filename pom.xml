@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel</groupId>
     <artifactId>memberberry</artifactId>
-    <version>1.0.24</version>
+    <version>1.0.25-SNAPSHOT</version>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
@@ -132,6 +132,11 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jacoco</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-test-security</artifactId>
             <scope>test</scope>
         </dependency>
@@ -243,12 +248,22 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+                            <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
+                            <append>true</append>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>default-prepare-agent-integration</id>
                         <goals>
                             <goal>prepare-agent-integration</goal>
                         </goals>
+                        <configuration>
+                            <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+                            <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
+                            <append>true</append>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>default-report</id>

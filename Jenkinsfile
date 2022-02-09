@@ -36,6 +36,11 @@ pipeline {
         }
 
         stage('Sonarcloud') {
+            when {
+                not {
+                    triggeredBy "TimerTrigger"
+                }
+            }
             steps {
                 configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
                     withSonarQubeEnv(installationName: 'Sonarcloud', credentialsId: 'e8795d01-550a-4c05-a4be-41b48b22403f') {
@@ -46,6 +51,11 @@ pipeline {
         }
 
         stage("Quality Gate") {
+            when {
+                not {
+                    triggeredBy "TimerTrigger"
+                }
+            }
             steps {
                 timeout(time: 30, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -220,7 +230,7 @@ pipeline {
 }
 
 def buildDockerImage(String tag) {
-    withEnv(['IMAGE_TAG='+tag]) {
+    withEnv(['IMAGE_TAG=' + tag]) {
         withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
             sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
             configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
@@ -242,7 +252,7 @@ def buildDockerImage(String tag) {
 }
 
 def buildMultiArchManifest(String tag) {
-    withEnv(['IMAGE_TAG='+tag]) {
+    withEnv(['IMAGE_TAG=' + tag]) {
         withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
             sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
             sh 'docker manifest create "rafaelostertag/memberberry:${IMAGE_TAG}" --amend "rafaelostertag/memberberry:${IMAGE_TAG}-amd64" --amend "rafaelostertag/memberberry:${IMAGE_TAG}-arm64"'
