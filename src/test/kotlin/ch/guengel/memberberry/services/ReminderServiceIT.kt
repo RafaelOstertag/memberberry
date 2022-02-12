@@ -4,32 +4,31 @@ import ch.guengel.memberberry.domain.Berry
 import ch.guengel.memberberry.domain.RememberPeriod
 import ch.guengel.memberberry.repositories.BerryRepository
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import io.mockk.slot
 import io.mockk.verify
+import io.quarkiverse.test.junit.mockk.InjectMock
+import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import java.time.OffsetDateTime
 import java.util.*
+import javax.inject.Inject
 
-@ExtendWith(MockKExtension::class)
-internal class ReminderServiceTest {
-    @MockK
+@QuarkusTest
+internal class ReminderServiceIT {
+    @InjectMock
     lateinit var berryRepository: BerryRepository
 
-    @MockK
+    @InjectMock
     lateinit var reminderStrategy: ReminderStrategy
 
-    @MockK
+    @InjectMock
     lateinit var executionCalculatorService: ExecutionCalculatorService
 
-    @InjectMockKs
+    @Inject
     lateinit var reminderService: ReminderService
 
     @Test
@@ -58,6 +57,8 @@ internal class ReminderServiceTest {
         every { berryRepository.update(capture(captureSlot)) }.answers { Uni.createFrom().item(1L) }
 
         reminderService.remind()
+
+        Thread.sleep(500)
 
         with(captureSlot.captured) {
             assertThat(this.id, `is`(berry.id))
@@ -101,6 +102,8 @@ internal class ReminderServiceTest {
         every { berryRepository.update(any()) } returns Uni.createFrom().item(1L)
 
         reminderService.remind()
+
+        Thread.sleep(500)
 
         verify(exactly = 3) { reminderStrategy.remind(any()) }
         verify(exactly = 2) { executionCalculatorService.calculateNextExecution(eq(RememberPeriod.DAILY), any()) }

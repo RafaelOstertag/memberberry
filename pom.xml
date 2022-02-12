@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel</groupId>
     <artifactId>memberberry</artifactId>
-    <version>1.0.27</version>
+    <version>1.0.28-SNAPSHOT</version>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
@@ -24,6 +24,7 @@
         <dependency-check-maven.version>6.5.3</dependency-check-maven.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+        <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 
         <testcontainers.version>1.16.3</testcontainers.version>
@@ -35,6 +36,7 @@
         <!-- Organization and project keys are displayed in the right sidebar of the project homepage -->
         <sonar.organization>rafaelostertag</sonar.organization>
         <sonar.junit.reportPaths>target/failsafe-reports,target/surefire-reports</sonar.junit.reportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>target/jacoco-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencyManagement>
@@ -195,6 +197,24 @@
                         <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${failsafe-plugin.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <maven.home>${maven.home}</maven.home>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>

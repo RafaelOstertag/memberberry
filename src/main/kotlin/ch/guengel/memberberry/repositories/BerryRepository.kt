@@ -10,6 +10,7 @@ import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.bson.*
 import org.bson.codecs.Codec
@@ -23,22 +24,29 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.util.*
 import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 import javax.enterprise.context.ApplicationScoped
 
 private const val ID_FIELD = "_id"
 
 @ApplicationScoped
 class BerryRepository(private val reactiveMongoClient: ReactiveMongoClient) {
+    private val scope = CoroutineScope(Dispatchers.IO)
     private fun ReactiveMongoClient.getBerryCollection(): ReactiveMongoCollection<Berry> =
         getDatabase("memberberry").getCollection("berry", Berry::class.java)
 
     @PostConstruct
     internal fun createIndex() {
-        CoroutineScope(Dispatchers.IO).launch {
+        scope.launch {
             reactiveMongoClient.getBerryCollection().createIndex(Indexes.ascending("userId")).await().indefinitely()
             reactiveMongoClient.getBerryCollection().createIndex(Indexes.ascending("nextExecution")).await()
                 .indefinitely()
         }
+    }
+
+    @PreDestroy
+    internal fun destroy() {
+        scope.cancel()
     }
 
     fun findBerry(id: UUID): Uni<Berry?> = reactiveMongoClient.getBerryCollection()
