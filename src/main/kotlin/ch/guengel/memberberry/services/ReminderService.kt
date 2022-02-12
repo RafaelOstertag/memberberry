@@ -2,9 +2,12 @@ package ch.guengel.memberberry.services
 
 import ch.guengel.memberberry.domain.Berry
 import ch.guengel.memberberry.repositories.BerryRepository
+import com.google.common.util.concurrent.ThreadFactoryBuilder
 import io.quarkus.scheduler.Scheduled
 import org.jboss.logging.Logger
 import java.time.OffsetDateTime
+import java.util.concurrent.Executors
+import javax.annotation.PreDestroy
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -13,6 +16,13 @@ class ReminderService(
     private val reminderStrategy: ReminderStrategy,
     private val executionCalculatorService: ExecutionCalculatorService
 ) {
+    private val executor =
+        Executors.newSingleThreadExecutor(ThreadFactoryBuilder().setNameFormat("reminder-service-%d").build())
+
+    @PreDestroy
+    internal fun preDestroy() {
+        executor.shutdown()
+    }
 
     @Scheduled(cron = "{memberberry.reminder.cron}")
     fun remind() {
@@ -20,6 +30,7 @@ class ReminderService(
         logger.info("Start reminding")
         berryRepository
             .findBerriesDueBy(now)
+            .emitOn(executor)
             .onItem().transform { berry ->
                 try {
                     reminderStrategy.remind(berry)
