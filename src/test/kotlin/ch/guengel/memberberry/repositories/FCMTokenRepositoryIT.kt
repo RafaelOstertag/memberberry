@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @QuarkusTest
 @QuarkusTestResource(MongoDbResource::class)
-internal class FCMTokenRepositoryTest {
+internal class FCMTokenRepositoryIT {
     @Inject
     @field: Default
     private lateinit var fcmTokenRepository: FCMTokenRepository

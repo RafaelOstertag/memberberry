@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @QuarkusTest
 @QuarkusTestResource(MongoDbResource::class)
-internal class BerryRepositoryTest {
+internal class BerryRepositoryIT {
     @Inject
     @field: Default
     private lateinit var berryRepository: BerryRepository

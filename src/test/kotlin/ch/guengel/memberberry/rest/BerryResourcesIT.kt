@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType
 
 @QuarkusTest
 @TestHTTPEndpoint(BerryResources::class)
-internal class BerryResourcesTest {
+internal class BerryResourcesIT {
     @InjectMock
     private lateinit var berryService: BerryService
 
