@@ -8,6 +8,8 @@ import ch.guengel.memberberry.services.Permissions
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.quarkiverse.test.junit.mockk.InjectMock
+import io.quarkus.test.common.http.TestHTTPEndpoint
 import io.quarkus.test.junit.QuarkusMock
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.security.TestSecurity
@@ -16,25 +18,26 @@ import io.restassured.response.ValidatableResponse
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.Matchers.matchesPattern
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.inject.Inject
 import javax.ws.rs.core.MediaType
 
 @QuarkusTest
+@TestHTTPEndpoint(BerryResources::class)
 internal class BerryResourcesTest {
-    @Inject
+    @InjectMock
     private lateinit var berryService: BerryService
 
     @Test
     @TestSecurity
     fun getBerriesUnauthenticated() {
         given()
-            .`when`().get("/v1/berries")
+            .`when`().get()
             .then()
             .statusCode(401)
     }
@@ -47,7 +50,7 @@ internal class BerryResourcesTest {
         every { berryService.getAll(any()) } returns Multi.createFrom().item(berry)
 
         val result = given()
-            .`when`().get("/v1/berries")
+            .`when`().get()
             .then()
             .statusCode(200)
         assertFirstBerry(result, berry)
@@ -71,7 +74,7 @@ internal class BerryResourcesTest {
         every { berryService.getAll(any()) } returns Multi.createFrom().item(berry)
 
         val result = given()
-            .`when`().get("/v1/berries")
+            .`when`().get()
             .then()
             .statusCode(200)
         assertFirstBerry(result, berry)
@@ -87,7 +90,7 @@ internal class BerryResourcesTest {
     @Test
     fun getBerryUnauthenticated() {
         given()
-            .`when`().get("/v1/berries/{berry}", "id")
+            .`when`().get("/{berry}", "id")
             .then()
             .statusCode(401)
     }
@@ -100,7 +103,7 @@ internal class BerryResourcesTest {
         every { berryService.find(any(), any()) } returns Uni.createFrom().item(berry)
 
         val result = given()
-            .`when`().get("/v1/berries/{berry}", berry.id.toString())
+            .`when`().get("/{berry}", berry.id.toString())
             .then()
             .statusCode(200)
 
@@ -114,7 +117,7 @@ internal class BerryResourcesTest {
         every { berryService.find(any(), any()) } returns Uni.createFrom().item { null }
 
         given()
-            .`when`().get("/v1/berries/{berry}", "must-not-exist")
+            .`when`().get("/{berry}", "must-not-exist")
             .then()
             .statusCode(404)
     }
@@ -125,7 +128,7 @@ internal class BerryResourcesTest {
         every { berryService.find(any(), any()) } returns Uni.createFrom().item { throw RuntimeException() }
 
         given()
-            .`when`().get("/v1/berries/{berry}", "must-not-exist")
+            .`when`().get("/{berry}", "must-not-exist")
             .then()
             .statusCode(400)
     }
@@ -138,7 +141,7 @@ internal class BerryResourcesTest {
         every { berryService.find(any(), any()) } returns Uni.createFrom().item(berry)
 
         val result = given()
-            .`when`().get("/v1/berries/{berry}", berry.id.toString())
+            .`when`().get("/{berry}", berry.id.toString())
             .then()
             .statusCode(200)
 
@@ -162,7 +165,7 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(createCreateUpdateBerry())
-            .post("/v1/berries")
+            .post("")
             .then()
             .statusCode(401)
     }
@@ -183,10 +186,10 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(createUpdateBerry)
-            .post("/v1/berries")
+            .post("")
             .then()
             .statusCode(201)
-            .header("Location", "http://localhost:8081/v1/berries/${berryUUID}")
+            .header("Location", matchesPattern("^http://localhost:[\\d]+/v1/berries/${berryUUID}\$"))
 
         verify { berryService.create(createUpdateBerry, Permissions("user", false)) }
     }
@@ -203,10 +206,10 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(createUpdateBerry)
-            .post("/v1/berries")
+            .post("")
             .then()
             .statusCode(201)
-            .header("Location", "http://localhost:8081/v1/berries/${berryUUID}")
+            .header("Location", matchesPattern("^http://localhost:[\\d]+/v1/berries/${berryUUID}\$"))
 
         verify { berryService.create(createUpdateBerry, Permissions("admin", true)) }
     }
@@ -217,7 +220,7 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(createCreateUpdateBerry())
-            .put("/v1/berries/{id}", "wdc")
+            .put("/{id}", "wdc")
             .then()
             .statusCode(401)
     }
@@ -234,7 +237,7 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(berry)
-            .put("/v1/berries/{id}", berryId)
+            .put("/{id}", berryId)
             .then()
             .statusCode(204)
 
@@ -253,7 +256,7 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(berry)
-            .put("/v1/berries/{id}", berryId)
+            .put("/{id}", berryId)
             .then()
             .statusCode(404)
 
@@ -272,7 +275,7 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(berry)
-            .put("/v1/berries/{id}", berryId)
+            .put("/{id}", berryId)
             .then()
             .statusCode(400)
 
@@ -291,7 +294,7 @@ internal class BerryResourcesTest {
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
             .body(berry)
-            .put("/v1/berries/{id}", berryId)
+            .put("/{id}", berryId)
             .then()
             .statusCode(204)
 
@@ -303,7 +306,7 @@ internal class BerryResourcesTest {
         given()
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
-            .delete("/v1/berries/{id}", "wdc")
+            .delete("/{id}", "wdc")
             .then()
             .statusCode(401)
     }
@@ -317,7 +320,7 @@ internal class BerryResourcesTest {
         given()
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
-            .delete("/v1/berries/{id}", berryId)
+            .delete("/{id}", berryId)
             .then()
             .statusCode(204)
 
@@ -333,7 +336,7 @@ internal class BerryResourcesTest {
         given()
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
-            .delete("/v1/berries/{id}", berryId)
+            .delete("/{id}", berryId)
             .then()
             .statusCode(404)
 
@@ -349,7 +352,7 @@ internal class BerryResourcesTest {
         given()
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
-            .delete("/v1/berries/{id}", berryId)
+            .delete("/{id}", berryId)
             .then()
             .statusCode(400)
 
@@ -365,7 +368,7 @@ internal class BerryResourcesTest {
         given()
             .`when`()
             .contentType(MediaType.APPLICATION_JSON)
-            .delete("/v1/berries/{id}", berryId)
+            .delete("/{id}", berryId)
             .then()
             .statusCode(204)
 
