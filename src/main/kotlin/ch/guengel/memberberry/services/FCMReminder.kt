@@ -14,6 +14,7 @@ class FCMReminder(
     private val fcmTokenRepository: FCMTokenRepository,
     private val cloudMessaging: CloudMessaging
 ) : ReminderStrategy {
+    // Helps to solve timeouts when running on raspberry pi k8s
     private val executor: ExecutorService =
         Executors.newSingleThreadExecutor(ThreadFactoryBuilder().setNameFormat("fcm-reminder-%d").build())
 

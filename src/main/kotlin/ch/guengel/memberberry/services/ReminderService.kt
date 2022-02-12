@@ -16,6 +16,7 @@ class ReminderService(
     private val reminderStrategy: ReminderStrategy,
     private val executionCalculatorService: ExecutionCalculatorService
 ) {
+    // Helps to solve timeouts when running on raspberry pi k8s
     private val executor =
         Executors.newSingleThreadExecutor(ThreadFactoryBuilder().setNameFormat("reminder-service-%d").build())
 
