@@ -113,9 +113,6 @@ pipeline {
                 }
 
                 stage('AMD64') {
-                    agent {
-                        label "amd64&&docker&&kotlin"
-                    }
                     when {
                         branch 'develop'
                         not {
@@ -153,14 +150,9 @@ pipeline {
 
             parallel {
                 stage('AMD64') {
-                    agent {
-                        label "amd64&&docker&&kotlin"
-                    }
-
                     environment {
                         VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
                     }
-
 
                     steps {
                         buildDockerImage(env.VERSION + "-amd64")
