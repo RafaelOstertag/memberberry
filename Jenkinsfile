@@ -151,7 +151,7 @@ pipeline {
             parallel {
                 stage('AMD64') {
                     environment {
-                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
                     }
 
                     steps {
@@ -165,7 +165,7 @@ pipeline {
                     }
 
                     environment {
-                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
                     }
 
 
@@ -186,7 +186,7 @@ pipeline {
             }
 
             environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
             }
 
             steps {
@@ -196,7 +196,7 @@ pipeline {
 
         stage('Trigger k8s deployment') {
             environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
             }
 
             when {
@@ -244,11 +244,26 @@ def buildDockerImage(String tag) {
 }
 
 def buildMultiArchManifest(String tag) {
-    withEnv(['IMAGE_TAG=' + tag]) {
+    withEnv(['IMAGE_TAG=' + tag, 'GRAALVM_HOME=/opt/graalvm', 'JAVA_HOME=/opt/graalvm']) {
         withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
             sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
-            sh 'docker manifest create "rafaelostertag/memberberry:${IMAGE_TAG}" --amend "rafaelostertag/memberberry:${IMAGE_TAG}-amd64" --amend "rafaelostertag/memberberry:${IMAGE_TAG}-arm64"'
-            sh 'docker manifest push --purge "rafaelostertag/memberberry:${IMAGE_TAG}"'
+            configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
+                '''mvn -B \\
+                        -s "${MAVEN_SETTINGS_XML}" \\
+                        clean \\
+                        package \\
+                        -DskipTests \\
+                        -Dnative \\
+                        -Dquarkus.docker.dockerfile-native-path=src/main/docker/Dockerfile.native-ubi \\
+                        -Dquarkus.container-image.name=memberberry
+                        -Dquarkus.container-image.build=true \\
+                        -Dquarkus.container-image.tag="${IMAGE_TAG}" \\
+                        -Dquarkus.container-image.group=rafaelostertag \\
+                        -Dquarkus.container-image.push=true \\
+                        -Dquarkus.container-image.username="${USERNAME}" \\
+                        -Dquarkus.container-image.password="${PASSWORD}"
+                        '''
+            }
         }
     }
 }
