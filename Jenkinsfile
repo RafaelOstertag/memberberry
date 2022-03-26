@@ -113,9 +113,6 @@ pipeline {
                 }
 
                 stage('AMD64') {
-                    agent {
-                        label "amd64&&docker&&kotlin"
-                    }
                     when {
                         branch 'develop'
                         not {
@@ -153,14 +150,9 @@ pipeline {
 
             parallel {
                 stage('AMD64') {
-                    agent {
-                        label "amd64&&docker&&kotlin"
-                    }
-
                     environment {
-                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
                     }
-
 
                     steps {
                         buildDockerImage(env.VERSION + "-amd64")
@@ -173,7 +165,7 @@ pipeline {
                     }
 
                     environment {
-                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                        VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
                     }
 
 
@@ -194,7 +186,7 @@ pipeline {
             }
 
             environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
             }
 
             steps {
@@ -204,7 +196,7 @@ pipeline {
 
         stage('Trigger k8s deployment') {
             environment {
-                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate -q -DforceStdout -Dexpression=project.version"
             }
 
             when {
@@ -215,7 +207,7 @@ pipeline {
             }
 
             steps {
-                build wait: false, job: '../Helm/memberberry', parameters: [string(name: 'VERSION', value: env.VERSION)]
+                build wait: false, job: '../memberberry-helm', parameters: [string(name: 'VERSION', value: env.VERSION)]
             }
         }
     }
@@ -230,16 +222,18 @@ pipeline {
 }
 
 def buildDockerImage(String tag) {
-    withEnv(['IMAGE_TAG=' + tag]) {
+    withEnv(['IMAGE_TAG=' + tag, 'GRAALVM_HOME=/opt/graalvm', 'JAVA_HOME=/opt/graalvm']) {
         withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-            sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
             configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
                 sh '''mvn -B \
                     -s "${MAVEN_SETTINGS_XML}" \\
                     clean \\
                     package \\
                     -DskipTests \\
+                    -Dnative \\
+                    -Dquarkus.docker.dockerfile-native-path=src/main/docker/Dockerfile.native-ubi \\
                     -Dquarkus.container-image.build=true \\
+                    -Dquarkus.container-image.name=memberberry \\
                     -Dquarkus.container-image.tag="${IMAGE_TAG}" \\
                     -Dquarkus.container-image.group=rafaelostertag \\
                     -Dquarkus.container-image.push=true \\

@@ -282,4 +282,67 @@
     <suppress>
         <cve>CVE-2021-37714</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2018-10892</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2019-13139</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2019-13509</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2019-16884</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2019-5736</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2020-27534</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2021-21284</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2021-21285</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: quarkus-container-image-docker-2.7.5.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.quarkus/quarkus\-container\-image\-docker@.*$</packageUrl>
+        <cve>CVE-2022-25365</cve>
+    </suppress>
 </suppressions>
