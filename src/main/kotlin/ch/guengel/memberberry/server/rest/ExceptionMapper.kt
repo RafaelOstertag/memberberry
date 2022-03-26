@@ -7,6 +7,7 @@ import org.jboss.resteasy.reactive.RestResponse
 import org.jboss.resteasy.reactive.RestResponse.Status
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper
 import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.WebApplicationException
 
 typealias ErrorResponse = Uni<RestResponse<ErrorMessage>>
 
@@ -17,8 +18,12 @@ class ExceptionMapper {
         createErrorMessageUni(ex, Status.INTERNAL_SERVER_ERROR)
 
     @ServerExceptionMapper
-    fun mapBerryUpdateException(ex: IllegalArgumentException): ErrorResponse =
+    fun mapIllegalArgumentException(ex: IllegalArgumentException): ErrorResponse =
         createErrorMessageUni(ex, Status.BAD_REQUEST)
+
+    @ServerExceptionMapper
+    fun mapWebApplicationException(ex: WebApplicationException): ErrorResponse =
+        createErrorMessageUni(ex, ex.response.status)
 
     companion object {
         private val logger = Logger.getLogger(ExceptionMapper::class.java)
@@ -26,14 +31,16 @@ class ExceptionMapper {
         fun <T : Exception> createErrorMessageUni(
             exception: T,
             httpStatusCode: Status
-        ): ErrorResponse = Uni.createFrom().item(exception)
+        ): ErrorResponse = createErrorMessageUni(exception, httpStatusCode.statusCode)
+
+        fun <T : Exception> createErrorMessageUni(exception: T, statusCode: Int) = Uni.createFrom().item(exception)
             .onItem().transform {
                 logger.error(it.message, it)
                 it.toErrorMessage()
             }
             .onItem().transform { errorMessage ->
                 RestResponse
-                    .ResponseBuilder.create<ErrorMessage>(httpStatusCode)
+                    .ResponseBuilder.create<ErrorMessage>(statusCode)
                     .entity(errorMessage)
                     .build()
             }
