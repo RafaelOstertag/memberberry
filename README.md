@@ -7,5 +7,4 @@ Simple ToDo List server. A ToDo item is called `Berry` and consists of
 * Optional tags
 * Optional description
 
-Refer to the [OpenAPI spec](https://memberberry.guengel.ch/api/q/swagger-ui/?urls.primaryName=prod) for further
-information.
+Refer to the [OpenAPI spec](https://memberberry.guengel.ch/api/q/swagger-ui/) for further information.
