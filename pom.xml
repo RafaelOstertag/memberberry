@@ -27,11 +27,12 @@
         <quarkus-junit5-mockk.version>1.0.1</quarkus-junit5-mockk.version>
         <assertk.version>0.25</assertk.version>
 
-        <dependency-check-maven.version>7.0.0</dependency-check-maven.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+        <dependency-check-maven.version>7.0.0</dependency-check-maven.version>
         <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
+        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
 
         <!-- Sonar -->
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -125,6 +126,10 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-container-image-docker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
 
         <dependency>
@@ -307,6 +312,39 @@
                         <goals>
                             <goal>report-integration</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Add OpenAPI spec for swagger resources-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-openapi-spec</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>ch.guengel.memberberry</groupId>
+                                    <artifactId>memberberry-api</artifactId>
+                                    <version>${memberberry-api.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes/META-INF</outputDirectory>
+                                    <fileMappers>
+                                        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                                            <pattern>.*/memberberry-server\.yaml</pattern>
+                                            <replacement>openapi.yaml</replacement>
+                                        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                                    </fileMappers>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
