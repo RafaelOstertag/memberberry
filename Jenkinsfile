@@ -222,15 +222,16 @@ pipeline {
 }
 
 def buildDockerImage(String tag) {
-    withEnv(['IMAGE_TAG=' + tag]) {
+    withEnv(['IMAGE_TAG=' + tag, 'GRAALVM_HOME=/opt/graalvm', 'JAVA_HOME=/opt/graalvm']) {
         withCredentials([usernamePassword(credentialsId: '750504ce-6f4f-4252-9b2b-5814bd561430', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-            sh 'docker login --username "$USERNAME" --password "$PASSWORD"'
             configFileProvider([configFile(fileId: 'b958fc4b-b1bd-4233-8692-c4a26a51c0f4', variable: 'MAVEN_SETTINGS_XML')]) {
                 sh '''mvn -B \
                     -s "${MAVEN_SETTINGS_XML}" \\
                     clean \\
                     package \\
                     -DskipTests \\
+                    -Dnative \\
+                    -Dquarkus.docker.dockerfile-native-path=src/main/docker/Dockerfile.native-ubi \\
                     -Dquarkus.container-image.build=true \\
                     -Dquarkus.container-image.name=memberberry \\
                     -Dquarkus.container-image.tag="${IMAGE_TAG}" \\
