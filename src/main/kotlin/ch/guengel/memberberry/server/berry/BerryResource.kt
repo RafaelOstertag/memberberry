@@ -17,7 +17,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
     lateinit var jwt: JsonWebToken
 
     override fun createBerry(berry: Berry): Uni<RestResponse<Void>> = Uni.combine().all()
-        .unis(createUniFrom(jwt.subject), createUniFrom(berry)).asTuple()
+        .unis(createUniFrom(jwt.name), createUniFrom(berry)).asTuple()
         .onItem().transformToUni { tuple ->
             berryService.createBerry(tuple.item1, tuple.item2)
         }
@@ -29,7 +29,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
     private fun <T> createUniFrom(item: T): Uni<T> = Uni.createFrom().item(item)
 
     override fun deleteBerry(berryId: UUID): Uni<RestResponse<Void>> = Uni.combine().all()
-        .unis(createUniFrom(jwt.subject), createUniFrom(berryId))
+        .unis(createUniFrom(jwt.name), createUniFrom(berryId))
         .asTuple()
         .onItem().transformToUni { tuple ->
             berryService.deleteBerry(tuple.item1, tuple.item2)
@@ -38,7 +38,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
             RestResponse.ResponseBuilder.noContent<Void>().build()
         }
 
-    override fun getAllTags(): Uni<RestResponse<List<String>>> = createUniFrom(jwt.subject)
+    override fun getAllTags(): Uni<RestResponse<List<String>>> = createUniFrom(jwt.name)
         .onItem().transformToMulti { userId ->
             berryService.getAllTags(userId)
         }
@@ -53,7 +53,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
         berryState: String?
     ): Uni<RestResponse<List<BerryWithId>>> = Uni.combine().all()
         .unis(
-            createUniFrom(jwt.subject),
+            createUniFrom(jwt.name),
             createUniFrom(pageIndex ?: 0),
             createUniFrom(pageSize ?: 25),
             createUniFrom(berryState)
@@ -82,7 +82,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
         }
 
     override fun getBerry(berryId: UUID): Uni<RestResponse<BerryWithId>> = Uni.combine().all()
-        .unis(createUniFrom(jwt.subject), createUniFrom(berryId))
+        .unis(createUniFrom(jwt.name), createUniFrom(berryId))
         .asTuple()
         .onItem().transformToUni { tuple ->
             berryService.getBerry(tuple.item1, tuple.item2)
@@ -92,7 +92,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
         }
 
     override fun updateBerry(berryId: UUID, berry: Berry): Uni<RestResponse<Void>> = Uni.combine().all()
-        .unis(createUniFrom(jwt.subject), createUniFrom(berryId), createUniFrom(berry))
+        .unis(createUniFrom(jwt.name), createUniFrom(berryId), createUniFrom(berry))
         .asTuple()
         .onItem().transformToUni { tuple ->
             berryService.updateBerry(tuple.item1, tuple.item2, tuple.item3)
