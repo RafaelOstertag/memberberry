@@ -232,6 +232,7 @@ def buildDockerImage(String tag) {
                     package \\
                     -DskipTests \\
                     -Dquarkus.container-image.build=true \\
+                    -Dquarkus.container-image.name=memberberry \\
                     -Dquarkus.container-image.tag="${IMAGE_TAG}" \\
                     -Dquarkus.container-image.group=rafaelostertag \\
                     -Dquarkus.container-image.push=true \\
@@ -255,7 +256,7 @@ def buildMultiArchManifest(String tag) {
                         -DskipTests \\
                         -Dnative \\
                         -Dquarkus.docker.dockerfile-native-path=src/main/docker/Dockerfile.native-ubi \\
-                        -Dquarkus.container-image.name=memberberry
+                        -Dquarkus.container-image.name=memberberry \\
                         -Dquarkus.container-image.build=true \\
                         -Dquarkus.container-image.tag="${IMAGE_TAG}" \\
                         -Dquarkus.container-image.group=rafaelostertag \\
