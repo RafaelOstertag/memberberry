@@ -49,7 +49,14 @@ class BerryService(private val berryPersistence: BerryPersistence) {
     fun getAllTags(userId: String): Multi<String> = Uni.createFrom().item(userId)
         .onItem().transformToMulti { uid -> berryPersistence.getTags(uid) }
 
-    fun getBerries(userId: String, pageIndex: Int, pageSize: Int, berryState: String?): Uni<PagedBerriesResult> {
+    fun getBerries(
+        userId: String,
+        pageIndex: Int,
+        pageSize: Int,
+        berryState: String?,
+        berryPriority: String?,
+        berryTag: String?
+    ): Uni<PagedBerriesResult> {
         if (pageIndex < 0) {
             throw IllegalArgumentException("Page index must not be less than 0")
         }
@@ -59,7 +66,7 @@ class BerryService(private val berryPersistence: BerryPersistence) {
         if (pageSize > 250) {
             throw IllegalArgumentException("Page size must not be greater than 250")
         }
-        return berryPersistence.getAllByUserId(userId, pageIndex, pageSize, berryState)
+        return berryPersistence.getAllByUserId(userId, pageIndex, pageSize, berryState, berryPriority, berryTag)
             .onItem().transform { pagedPersistedBerries ->
                 val berries = pagedPersistedBerries.persistedBerry.map { it.toBerryWithId() }
                 PagedBerriesResult(

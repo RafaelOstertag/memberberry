@@ -222,6 +222,71 @@ internal class BerryPersistenceIT {
         assertThat(anyState.totalCount).isEqualTo(2)
     }
 
+    @Test
+    fun `should find berries with various filters`() {
+        setupForFilterTest()
+
+        var result = berryPersistence.getAllByUserId("user-1", 0, 10).await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(7)
+        assertThat(result.persistedBerry).hasSize(7)
+
+        result = berryPersistence.getAllByUserId("user-1", 0, 10, "open").await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(4)
+        assertThat(result.persistedBerry).hasSize(4)
+        assertBerryTitles(
+            result,
+            "open-low-no-tag-berry",
+            "open-medium-no-tag-berry",
+            "open-medium-tags-berry",
+            "open-low-tags-berry"
+        )
+
+        result = berryPersistence.getAllByUserId("user-1", 0, 10, "closed", "medium").await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(2)
+        assertThat(result.persistedBerry).hasSize(2)
+        assertBerryTitles(result, "closed-medium-no-tag-berry", "closed-medium-tags-berry")
+
+        result = berryPersistence.getAllByUserId("user-2", 0, 10, "closed", "medium", "tag-1").await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(1)
+        assertThat(result.persistedBerry).hasSize(1)
+        assertBerryTitles(result, "closed-medium-tags-berry")
+
+        result = berryPersistence.getAllByUserId("user-2", 0, 10, null, null, "tag-1").await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(4)
+        assertThat(result.persistedBerry).hasSize(4)
+        assertBerryTitles(
+            result,
+            "closed-medium-tags-berry",
+            "closed-low-tags-berry",
+            "open-medium-tags-berry",
+            "open-low-tags-berry"
+        )
+
+        result = berryPersistence.getAllByUserId("user-2", 0, 10, null, null, "tag-3").await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(1)
+        assertThat(result.persistedBerry).hasSize(1)
+        assertBerryTitles(
+            result,
+            "open-medium-tags-berry",
+        )
+
+        result = berryPersistence.getAllByUserId("user-2", 0, 10, null, "low", null).await().indefinitely()
+        assertThat(result.totalCount).isEqualTo(3)
+        assertThat(result.persistedBerry).hasSize(3)
+        assertBerryTitles(
+            result,
+            "open-low-no-tag-berry",
+            "closed-low-tags-berry",
+            "open-low-tags-berry"
+        )
+    }
+
+    private fun assertBerryTitles(pagedPersistedBerries: PagedPersistedBerries, vararg expectedTitle: String) {
+        assertThat(pagedPersistedBerries.persistedBerry.map { it.berryPersistenceModel.title }).containsExactlyInAnyOrder(
+            *expectedTitle
+        )
+    }
+
     private fun assertUpdatedBerry(
         updatedPersistedBerry: PersistedBerry,
         expected: BerryPersistenceModel,
@@ -271,5 +336,63 @@ internal class BerryPersistenceIT {
 
         val emptyTagList = berryPersistence.getTags("user-with-no-berries").collect().asList().await().indefinitely()
         assertThat(emptyTagList).isEmpty()
+    }
+
+    private fun setupForFilterTest() {
+        val berries = mutableListOf<BerryPersistenceModel>()
+        for (user in arrayOf("user-1", "user-2")) {
+            berries += BerryPersistenceModel(null, user, "open-low-no-tag-berry", "open", "low", "", emptySet())
+            berries += BerryPersistenceModel(null, user, "open-medium-no-tag-berry", "open", "medium", "", emptySet())
+            berries += BerryPersistenceModel(
+                null,
+                user,
+                "closed-medium-no-tag-berry",
+                "closed",
+                "medium",
+                "",
+                emptySet()
+            )
+
+            berries += BerryPersistenceModel(
+                null,
+                user,
+                "closed-medium-tags-berry",
+                "closed",
+                "medium",
+                "",
+                setOf("tag-1", "tag-2")
+            )
+            berries += BerryPersistenceModel(
+                null,
+                user,
+                "closed-low-tags-berry",
+                "closed",
+                "low",
+                "",
+                setOf("tag-1", "tag-2")
+            )
+            berries += BerryPersistenceModel(
+                null,
+                user,
+                "open-medium-tags-berry",
+                "open",
+                "medium",
+                "",
+                setOf("tag-1", "tag-2", "tag-3")
+            )
+            berries += BerryPersistenceModel(
+                null,
+                user,
+                "open-low-tags-berry",
+                "open",
+                "low",
+                "",
+                setOf("tag-1", "tag-2")
+            )
+        }
+
+        berries.forEach {
+            berryPersistence.save(it).await().indefinitely()
+        }
     }
 }

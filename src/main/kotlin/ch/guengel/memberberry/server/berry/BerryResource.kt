@@ -50,36 +50,29 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
     override fun getBerries(
         pageSize: Int?,
         pageIndex: Int?,
-        berryState: String?
-    ): Uni<RestResponse<List<BerryWithId>>> = Uni.combine().all()
-        .unis(
-            createUniFrom(jwt.name),
-            createUniFrom(pageIndex ?: 0),
-            createUniFrom(pageSize ?: 25),
-            createUniFrom(berryState)
-        )
-        .asTuple()
-        .onItem().transformToUni { tuple ->
-            berryService.getBerries(tuple.item1, tuple.item2, tuple.item3, tuple.item4)
-        }
-        .onItem().transform { pagedBerriesResult ->
-            val responseBuilder = RestResponse.ResponseBuilder.ok(pagedBerriesResult.berriesWithId)
-                .header("x-page-size", pagedBerriesResult.pageSize)
-                .header("x-page-index", pagedBerriesResult.pageIndex)
-                .header("x-first-page", pagedBerriesResult.firstPage)
-                .header("x-last-page", pagedBerriesResult.lastPage)
-                .header("x-total-pages", pagedBerriesResult.totalPages)
-                .header("x-total-entries", pagedBerriesResult.totalEntries)
+        berryState: String?,
+        berryPriority: String?,
+        berryTag: String?
+    ): Uni<RestResponse<List<BerryWithId>>> =
+        berryService.getBerries(jwt.name, pageIndex ?: 0, pageSize ?: 25, berryState, berryPriority, berryTag)
+            .onItem().transform { pagedBerriesResult ->
+                val responseBuilder = RestResponse.ResponseBuilder.ok(pagedBerriesResult.berriesWithId)
+                    .header("x-page-size", pagedBerriesResult.pageSize)
+                    .header("x-page-index", pagedBerriesResult.pageIndex)
+                    .header("x-first-page", pagedBerriesResult.firstPage)
+                    .header("x-last-page", pagedBerriesResult.lastPage)
+                    .header("x-total-pages", pagedBerriesResult.totalPages)
+                    .header("x-total-entries", pagedBerriesResult.totalEntries)
 
-            if (pagedBerriesResult.previousPageIndex != null) {
-                responseBuilder.header("x-previous-page-index", pagedBerriesResult.previousPageIndex)
-            }
-            if (pagedBerriesResult.nextPageIndex != null) {
-                responseBuilder.header("x-next-page-index", pagedBerriesResult.nextPageIndex)
-            }
+                if (pagedBerriesResult.previousPageIndex != null) {
+                    responseBuilder.header("x-previous-page-index", pagedBerriesResult.previousPageIndex)
+                }
+                if (pagedBerriesResult.nextPageIndex != null) {
+                    responseBuilder.header("x-next-page-index", pagedBerriesResult.nextPageIndex)
+                }
 
-            responseBuilder.build()
-        }
+                responseBuilder.build()
+            }
 
     override fun getBerry(berryId: UUID): Uni<RestResponse<BerryWithId>> = Uni.combine().all()
         .unis(createUniFrom(jwt.name), createUniFrom(berryId))
