@@ -4,7 +4,6 @@ pipeline {
     }
 
     triggers {
-        pollSCM '@hourly'
         cron '@daily'
     }
 
@@ -207,7 +206,7 @@ pipeline {
             }
 
             steps {
-                build wait: false, job: '../../memberberry-helm', parameters: [string(name: 'VERSION', value: env.VERSION)]
+                build wait: false, job: '../memberberry-helm', parameters: [string(name: 'VERSION', value: env.VERSION)]
             }
         }
     }

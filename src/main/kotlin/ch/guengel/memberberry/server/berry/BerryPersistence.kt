@@ -1,8 +1,7 @@
 package ch.guengel.memberberry.server.berry
 
 import com.mongodb.client.model.*
-import com.mongodb.client.model.Filters.and
-import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Filters.*
 import com.mongodb.client.model.Sorts.ascending
 import io.quarkus.mongodb.FindOptions
 import io.quarkus.mongodb.reactive.ReactiveMongoClient
@@ -107,12 +106,14 @@ class BerryPersistence(
         userId: String,
         pageIndex: Int,
         pageSize: Int,
-        inState: String? = null
+        inState: String? = null,
+        withPriority: String? = null,
+        withTag: String? = null
     ): Uni<PagedPersistedBerries> = Uni.combine()
         .all()
         .unis(
-            getAllByUserIdMulti(userId, pageIndex, pageSize, inState).collect().asList(),
-            countBerriesOfUser(userId, inState)
+            getAllByUserIdMulti(userId, pageIndex, pageSize, inState, withPriority, withTag).collect().asList(),
+            countBerriesOfUser(userId, inState, withPriority, withTag)
         )
         .asTuple()
         .onItem().ifNull().failWith(BerryPersistenceException("Unable to get Berries for user $userId"))
@@ -134,16 +135,23 @@ class BerryPersistence(
         userId: String,
         pageIndex: Int,
         pageSize: Int,
-        inState: String?
+        inState: String?,
+        withPriority: String?,
+        withTag: String?
     ): Multi<PersistedBerry> {
-        val matcher = berryMatcher(userId, inState)
+        val matcher = berryMatcher(userId, inState, withPriority, withTag)
         return collection
             .find(matcher, paginationOptions(pageIndex, pageSize))
             .onItem().transform { berryDocument -> berryDocument.asPersistedBerry() }
     }
 
-    private fun countBerriesOfUser(userId: String, inState: String?): Uni<Int> {
-        val matcher = berryMatcher(userId, inState)
+    private fun countBerriesOfUser(
+        userId: String,
+        inState: String?,
+        withPriority: String?,
+        withTag: String?
+    ): Uni<Int> {
+        val matcher = berryMatcher(userId, inState, withPriority, withTag)
         return untypedCollection.aggregate(listOf(Aggregates.match(matcher), Aggregates.count("count")))
             .collect().first()
             .onItem().ifNull().continueWith { Document() }
@@ -155,15 +163,27 @@ class BerryPersistence(
      *
      * Null `inState` selects berries in any state.
      */
-    private fun berryMatcher(userId: String, inState: String?): Bson {
-        val userIdSelector = userIdEqualTo(userId)
+    private fun berryMatcher(userId: String, inState: String?, withPriority: String?, withTag: String?): Bson {
+        val matchers = mutableListOf<Bson>()
+        matchers += userIdEqualTo(userId)
 
-        val matcher = if (inState != null) {
-            and(userIdSelector, stateEqualTo(inState))
-        } else {
-            userIdSelector
+        if (inState != null) {
+            matchers += stateEqualTo(inState)
         }
-        return matcher
+
+        if (withPriority != null) {
+            matchers += priorityEqualTo(withPriority)
+        }
+
+        if (withTag != null) {
+            matchers += containsTag(withTag)
+        }
+
+        if (matchers.size == 1) {
+            return matchers[0]
+        }
+
+        return and(matchers)
     }
 
     private fun paginationOptions(pageIndex: Int, pageSize: Int) =
@@ -216,6 +236,10 @@ class BerryPersistence(
     private fun userIdEqualTo(userId: String) = eq("userId", userId)
 
     private fun stateEqualTo(state: String) = eq("state", state)
+
+    private fun priorityEqualTo(priority: String) = eq("priority", priority)
+
+    private fun containsTag(tag: String) = `in`("tags", tag)
 }
 
 private fun BerryPersistenceModel.asNewDocument() = BerryDocument(

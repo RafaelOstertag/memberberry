@@ -14,6 +14,7 @@ import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.nullValue
 import org.hamcrest.core.Is.`is`
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -251,6 +252,124 @@ internal class BerryResourceIT {
             } Then {
                 statusCode(200)
                 assertThat().body("size()", `is`(2))
+            }
+        }
+
+        @Test
+        @TestSecurity(user = "c-user", roles = ["user"])
+        fun `should apply filters`() {
+            val berry = createBerry()
+
+            Given {
+                contentType(ContentType.JSON)
+                body(berry)
+            } When {
+                post()
+            } Then {
+                statusCode(201)
+            }
+
+            Given {
+                queryParam("berry-state", "open")
+                queryParam("berry-priority", "high")
+                queryParam("berry-tag", "tag2")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(1))
+            }
+
+            Given {
+                queryParam("berry-priority", "high")
+                queryParam("berry-tag", "tag2")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(1))
+            }
+
+            Given {
+                queryParam("berry-state", "open")
+                queryParam("berry-tag", "tag2")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(1))
+            }
+
+            Given {
+                queryParam("berry-state", "open")
+                queryParam("berry-priority", "high")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(1))
+            }
+
+            Given {
+                queryParam("berry-state", "closed")
+                queryParam("berry-priority", "high")
+                queryParam("berry-tag", "tag2")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(0))
+            }
+
+            Given {
+                queryParam("berry-state", "open")
+                queryParam("berry-priority", "medium")
+                queryParam("berry-tag", "tag2")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(0))
+            }
+
+            Given {
+                queryParam("berry-state", "open")
+                queryParam("berry-priority", "high")
+                queryParam("berry-tag", "another-tag")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(0))
+            }
+        }
+
+        @Test
+        @TestSecurity(user = "d-user", roles = ["user"])
+        fun `should set headers when getting berries`() {
+            val berry = createBerry()
+
+            Given {
+                contentType(ContentType.JSON)
+                body(berry)
+            } When {
+                post()
+            } Then {
+                statusCode(201)
+            }
+
+            When {
+                get()
+            } Then {
+                statusCode(200)
+                header("x-page-size", "25")
+                header("x-page-index", "0")
+                header("x-previous-page-index", nullValue())
+                header("x-next-page-index", nullValue())
+                header("x-first-page", "true")
+                header("x-last-page", "true")
+                header("x-total-pages", "1")
+                header("x-total-entries", "1")
             }
         }
     }

@@ -161,7 +161,7 @@ internal class BerryServiceTest {
         every { berryPersistence.getAllByUserId("user", 0, 100, "open") } returns Uni.createFrom()
             .item(pagedPersistedBerry)
 
-        var actual = berryService.getBerries("user", 0, 100, "open").await().indefinitely()
+        var actual = berryService.getBerries("user", 0, 100, "open", null, null).await().indefinitely()
         var expected = PagedBerriesResult(emptyList(), 100, 0, null, null, true, true, 1, 10)
         assertThat(actual).isEqualTo(expected)
 
@@ -170,7 +170,7 @@ internal class BerryServiceTest {
         every { berryPersistence.getAllByUserId("user", 1, 100, "open") } returns Uni.createFrom()
             .item(pagedPersistedBerry)
 
-        actual = berryService.getBerries("user", 1, 100, "open").await().indefinitely()
+        actual = berryService.getBerries("user", 1, 100, "open", null, null).await().indefinitely()
         expected = PagedBerriesResult(emptyList(), 100, 1, 0, 2, false, false, 3, 280)
         assertThat(actual).isEqualTo(expected)
 
@@ -179,7 +179,7 @@ internal class BerryServiceTest {
         every { berryPersistence.getAllByUserId("user", 2, 100, "open") } returns Uni.createFrom()
             .item(pagedPersistedBerry)
 
-        actual = berryService.getBerries("user", 2, 100, "open").await().indefinitely()
+        actual = berryService.getBerries("user", 2, 100, "open", null, null).await().indefinitely()
         expected = PagedBerriesResult(emptyList(), 100, 2, 1, null, false, true, 3, 280)
         assertThat(actual).isEqualTo(expected)
 
@@ -188,7 +188,7 @@ internal class BerryServiceTest {
         every { berryPersistence.getAllByUserId("user", 0, 100, "open") } returns Uni.createFrom()
             .item(pagedPersistedBerry)
 
-        actual = berryService.getBerries("user", 0, 100, "open").await().indefinitely()
+        actual = berryService.getBerries("user", 0, 100, "open", null, null).await().indefinitely()
         expected = PagedBerriesResult(emptyList(), 100, 0, null, null, true, true, 0, 0)
         assertThat(actual).isEqualTo(expected)
 
@@ -197,17 +197,29 @@ internal class BerryServiceTest {
         every { berryPersistence.getAllByUserId("user", 3, 100, "open") } returns Uni.createFrom()
             .item(pagedPersistedBerry)
 
-        assertThat { berryService.getBerries("user", 3, 100, "open").await().indefinitely() }.isFailure()
+        assertThat { berryService.getBerries("user", 3, 100, "open", null, null).await().indefinitely() }.isFailure()
             .hasClass(IllegalArgumentException::class)
     }
 
     @Test
     fun `should validate pagination parameters`() {
-        assertThat { berryService.getBerries("userid", -1, 10, null) }.isFailure()
+        assertThat { berryService.getBerries("userid", -1, 10, null, null, null) }.isFailure()
             .hasClass(IllegalArgumentException::class)
-        assertThat { berryService.getBerries("userid", 2, 0, null) }.isFailure()
+        assertThat { berryService.getBerries("userid", 2, 0, null, null, null) }.isFailure()
             .hasClass(IllegalArgumentException::class)
-        assertThat { berryService.getBerries("userid", 2, 251, null) }.isFailure()
+        assertThat { berryService.getBerries("userid", 2, 251, null, null, null) }.isFailure()
             .hasClass(IllegalArgumentException::class)
+    }
+
+    @Test
+    fun `should pass along all filters`() {
+        // On page in total
+        val pagedPersistedBerry = PagedPersistedBerries(emptyList(), 10, true, true, false, false)
+        every { berryPersistence.getAllByUserId("user", 0, 100, "open", "medium", "a-tag") } returns Uni.createFrom()
+            .item(pagedPersistedBerry)
+
+        val actual = berryService.getBerries("user", 0, 100, "open", "medium", "a-tag").await().indefinitely()
+        val expected = PagedBerriesResult(emptyList(), 100, 0, null, null, true, true, 1, 10)
+        assertThat(actual).isEqualTo(expected)
     }
 }
