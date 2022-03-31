@@ -52,9 +52,33 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
         pageIndex: Int?,
         berryState: String?,
         berryPriority: String?,
-        berryTag: String?
-    ): Uni<RestResponse<List<BerryWithId>>> =
-        berryService.getBerries(jwt.name, pageIndex ?: 0, pageSize ?: 25, berryState, berryPriority, berryTag)
+        berryTag: String?,
+        berryOrderBy: String?,
+        berryOrder: String?
+    ): Uni<RestResponse<List<BerryWithId>>> {
+        val getArguments = getArguments {
+            userId = jwt.name
+            pagination {
+                index = pageIndex ?: 0
+                size = pageSize ?: 25
+            }
+            ordering {
+                orderBy = if (berryOrderBy != null) {
+                    OrderBy.valueOf(berryOrderBy.uppercase())
+                } else {
+                    OrderBy.TITLE
+                }
+                order = if (berryOrder != null) {
+                    Order.valueOf(berryOrder.uppercase())
+                } else {
+                    Order.DESCENDING
+                }
+            }
+            inState = berryState ?: ""
+            withPriority = berryPriority ?: ""
+            withTag = berryTag ?: ""
+        }
+        return berryService.getBerries(getArguments)
             .onItem().transform { pagedBerriesResult ->
                 val responseBuilder = RestResponse.ResponseBuilder.ok(pagedBerriesResult.berriesWithId)
                     .header("x-page-size", pagedBerriesResult.pageSize)
@@ -73,6 +97,7 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
 
                 responseBuilder.build()
             }
+    }
 
     override fun getBerry(berryId: UUID): Uni<RestResponse<BerryWithId>> = Uni.combine().all()
         .unis(createUniFrom(jwt.name), createUniFrom(berryId))

@@ -50,34 +50,29 @@ class BerryService(private val berryPersistence: BerryPersistence) {
         .onItem().transformToMulti { uid -> berryPersistence.getTags(uid) }
 
     fun getBerries(
-        userId: String,
-        pageIndex: Int,
-        pageSize: Int,
-        berryState: String?,
-        berryPriority: String?,
-        berryTag: String?
+        getArguments: GetArguments
     ): Uni<PagedBerriesResult> {
-        if (pageIndex < 0) {
+        if (getArguments.pagination.index < 0) {
             throw IllegalArgumentException("Page index must not be less than 0")
         }
-        if (pageSize < 1) {
+        if (getArguments.pagination.size < 1) {
             throw IllegalArgumentException("Page size must not be less than 1")
         }
-        if (pageSize > 250) {
+        if (getArguments.pagination.size > 250) {
             throw IllegalArgumentException("Page size must not be greater than 250")
         }
-        return berryPersistence.getAllByUserId(userId, pageIndex, pageSize, berryState, berryPriority, berryTag)
+        return berryPersistence.getAllByUserId(getArguments)
             .onItem().transform { pagedPersistedBerries ->
                 val berries = pagedPersistedBerries.persistedBerry.map { it.toBerryWithId() }
                 PagedBerriesResult(
                     berriesWithId = berries,
-                    pageSize = pageSize,
-                    pageIndex = pageIndex,
-                    previousPageIndex = if (pagedPersistedBerries.first) null else pageIndex - 1,
-                    nextPageIndex = if (pagedPersistedBerries.last) null else pageIndex + 1,
+                    pageSize = getArguments.pagination.size,
+                    pageIndex = getArguments.pagination.index,
+                    previousPageIndex = if (pagedPersistedBerries.first) null else getArguments.pagination.index - 1,
+                    nextPageIndex = if (pagedPersistedBerries.last) null else getArguments.pagination.index + 1,
                     firstPage = pagedPersistedBerries.first,
                     lastPage = pagedPersistedBerries.last,
-                    totalPages = ceil(pagedPersistedBerries.totalCount / pageSize.toDouble()).toInt(),
+                    totalPages = ceil(pagedPersistedBerries.totalCount / getArguments.pagination.size.toDouble()).toInt(),
                     totalEntries = pagedPersistedBerries.totalCount
                 )
             }
