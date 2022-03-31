@@ -372,5 +372,90 @@ internal class BerryResourceIT {
                 header("x-total-entries", "1")
             }
         }
+
+        @Test
+        @TestSecurity(user = "d-user", roles = ["user"])
+        fun `should apply sorting options`() {
+            val berry = createBerry()
+
+            Given {
+                contentType(ContentType.JSON)
+                body(berry)
+            } When {
+                post()
+            } Then {
+                statusCode(201)
+            }
+
+            val otherBerry = createBerry()
+            otherBerry.title("second berry")
+            otherBerry.state(BerryState.CLOSED)
+            otherBerry.priority(BerryPriority.LOW)
+
+            Given {
+                contentType(ContentType.JSON)
+                body(otherBerry)
+            } When {
+                post()
+            } Then {
+                statusCode(201)
+            }
+
+            Given {
+                queryParam("berry-order-by", "title")
+                queryParam("berry-order", "descending")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(2))
+                assertThat().body("[0].title", `is`("second berry"))
+                assertThat().body("[1].title", `is`("first berry"))
+            }
+
+            Given {
+                queryParam("berry-order-by", "title")
+                queryParam("berry-order", "ascending")
+            } When {
+                get()
+            } Then {
+                statusCode(200)
+                assertThat().body("size()", `is`(2))
+                assertThat().body("[0].title", `is`("first berry"))
+                assertThat().body("[1].title", `is`("second berry"))
+            }
+        }
+
+        @Test
+        @TestSecurity(user = "d-user", roles = ["user"])
+        fun `should handling sorting options correctly`() {
+            Given {
+                queryParam("berry-order-by", "should-fail")
+                queryParam("berry-order", "descending")
+            } When {
+                get()
+            } Then {
+                statusCode(400)
+                assertThat().body(
+                    "reason",
+                    `is`("No enum constant ch.guengel.memberberry.server.berry.OrderBy.SHOULD-FAIL")
+                )
+                assertThat().body("type", `is`("IllegalArgumentException"))
+            }
+
+            Given {
+                queryParam("berry-order-by", "title")
+                queryParam("berry-order", "should-fail")
+            } When {
+                get()
+            } Then {
+                statusCode(400)
+                assertThat().body(
+                    "reason",
+                    `is`("No enum constant ch.guengel.memberberry.server.berry.Order.SHOULD-FAIL")
+                )
+                assertThat().body("type", `is`("IllegalArgumentException"))
+            }
+        }
     }
 }

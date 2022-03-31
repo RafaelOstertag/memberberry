@@ -253,4 +253,22 @@ internal class BerryServiceTest {
         val expected = PagedBerriesResult(emptyList(), 100, 0, null, null, true, true, 1, 10)
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `should pass along order options`() {
+        val pagedPersistedBerry = PagedPersistedBerries(emptyList(), 10, true, true, false, false)
+        val getArguments = getArguments {
+            userId = "user"
+            ordering {
+                orderBy = OrderBy.PRIORITY
+                order = Order.DESCENDING
+            }
+        }
+        every { berryPersistence.getAllByUserId(getArguments) } returns Uni.createFrom()
+            .item(pagedPersistedBerry)
+
+        val actual = berryService.getBerries(getArguments).await().indefinitely()
+        val expected = PagedBerriesResult(emptyList(), 25, 0, null, null, true, true, 1, 10)
+        assertThat(actual).isEqualTo(expected)
+    }
 }

@@ -21,7 +21,7 @@
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
-        <memberberry-api.version>1.1.0</memberberry-api.version>
+        <memberberry-api.version>1.2.0</memberberry-api.version>
 
         <firebase-admin.version>8.1.0</firebase-admin.version>
         <quarkus-junit5-mockk.version>1.0.1</quarkus-junit5-mockk.version>
