@@ -54,7 +54,17 @@ class BerryResource(private val berryService: BerryService) : BerryV1Api {
         berryPriority: String?,
         berryTag: String?
     ): Uni<RestResponse<List<BerryWithId>>> =
-        berryService.getBerries(jwt.name, pageIndex ?: 0, pageSize ?: 25, berryState, berryPriority, berryTag)
+        berryService.getBerries(
+            getArguments {
+                userId = jwt.name
+                pagination {
+                    index = pageIndex ?: 0
+                    size = pageSize ?: 25
+                }
+                inState = berryState ?: ""
+                withPriority = berryPriority ?: ""
+                withTag = berryTag ?: ""
+            })
             .onItem().transform { pagedBerriesResult ->
                 val responseBuilder = RestResponse.ResponseBuilder.ok(pagedBerriesResult.berriesWithId)
                     .header("x-page-size", pagedBerriesResult.pageSize)

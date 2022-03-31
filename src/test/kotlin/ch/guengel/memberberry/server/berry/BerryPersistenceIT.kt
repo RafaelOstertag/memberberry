@@ -100,16 +100,22 @@ internal class BerryPersistenceIT {
 
         listOf(newBerry1, newBerry2, newBerry3).forEach { berryPersistence.save(it).await().indefinitely() }
 
-        val berriesOfUser = berryPersistence.getAllByUserId("user", 0, 100).await().indefinitely()
+        val getArguments = getArguments {
+            userId = "user"
+        }
+        val berriesOfUser = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(berriesOfUser.persistedBerry).hasSize(2)
         assertThat(berriesOfUser.totalCount).isEqualTo(2)
 
+        getArguments.userId = "other-user"
         val berriesOfOtherUser =
-            berryPersistence.getAllByUserId("other-user", 0, 100).await().indefinitely()
+            berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(berriesOfOtherUser.persistedBerry).hasSize(1)
         assertThat(berriesOfOtherUser.totalCount).isEqualTo(1)
 
-        val noBerries = berryPersistence.getAllByUserId("user-with-no-berries", 0, 100).await().indefinitely()
+
+        getArguments.userId = "user-with-no-berries"
+        val noBerries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(noBerries.persistedBerry).isEmpty()
         assertThat(noBerries.totalCount).isZero()
     }
@@ -131,19 +137,31 @@ internal class BerryPersistenceIT {
             }
             .forEach { berryPersistence.save(it).await().indefinitely() }
 
-        (0 until 10).forEach { pageIndex ->
-            val pagedBerries = berryPersistence.getAllByUserId("user", pageIndex, 10).await().indefinitely()
-            val numberOfBerriesInPage = if (pageIndex < 9) 10 else 9
+
+        (0 until 10).forEach { currentPageIndex ->
+            val getArguments = getArguments {
+                userId = "user"
+                pagination {
+                    index = currentPageIndex
+                    size = 10
+                }
+                ordering {
+                    orderBy = OrderBy.TITLE
+                    order = Order.ASCENDING
+                }
+            }
+            val pagedBerries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+            val numberOfBerriesInPage = if (currentPageIndex < 9) 10 else 9
             assertThat(pagedBerries.persistedBerry).hasSize(numberOfBerriesInPage)
-            val firstPage = pageIndex == 0
+            val firstPage = currentPageIndex == 0
             assertThat(pagedBerries.first).isEqualTo(firstPage)
-            val lastPage = pageIndex == 9
+            val lastPage = currentPageIndex == 9
             assertThat(pagedBerries.last).isEqualTo(lastPage)
             assertThat(pagedBerries.hasPrevious).isEqualTo(!firstPage)
             assertThat(pagedBerries.hasNext).isEqualTo(!lastPage)
             assertThat(pagedBerries.totalCount).isEqualTo(99)
             (0 until numberOfBerriesInPage).forEach { berryIndex ->
-                val berryNumber = (pageIndex * 10 + berryIndex).toString().padStart(3, '0')
+                val berryNumber = (currentPageIndex * 10 + berryIndex).toString().padStart(3, '0')
                 assertThat(pagedBerries.persistedBerry[berryIndex].berryPersistenceModel.title).isEqualTo(
                     "title $berryNumber"
                 )
@@ -151,7 +169,14 @@ internal class BerryPersistenceIT {
         }
 
         // Page index greater than available pages
-        var pagedBerries = berryPersistence.getAllByUserId("user", 100, 10).await().indefinitely()
+        var getArguments = getArguments {
+            userId = "user"
+            pagination {
+                index = 100
+                size = 10
+            }
+        }
+        var pagedBerries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(pagedBerries.persistedBerry).isEmpty()
         assertThat(pagedBerries.totalCount).isEqualTo(99)
         assertThat(pagedBerries.first).isFalse()
@@ -160,7 +185,14 @@ internal class BerryPersistenceIT {
         assertThat(pagedBerries.hasPrevious).isTrue()
 
         // Handling of empty result set
-        pagedBerries = berryPersistence.getAllByUserId("user-with-no-berries", 0, 10).await().indefinitely()
+        getArguments = getArguments {
+            userId = "user-with-no-berries"
+            pagination {
+                index = 0
+                size = 10
+            }
+        }
+        pagedBerries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(pagedBerries.persistedBerry).isEmpty()
         assertThat(pagedBerries.totalCount).isEqualTo(0)
         assertThat(pagedBerries.first).isTrue()
@@ -179,7 +211,15 @@ internal class BerryPersistenceIT {
             emptySet()
         )
         berryPersistence.save(oneBerry).await().indefinitely()
-        pagedBerries = berryPersistence.getAllByUserId("user-with-one-berry", 0, 10).await().indefinitely()
+
+        getArguments = getArguments {
+            userId = "user-with-one-berry"
+            pagination {
+                index = 0
+                size = 10
+            }
+        }
+        pagedBerries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(pagedBerries.persistedBerry).hasSize(1)
         assertThat(pagedBerries.totalCount).isEqualTo(1)
         assertThat(pagedBerries.first).isTrue()
@@ -209,15 +249,25 @@ internal class BerryPersistenceIT {
         BerryPersistenceModel(null, "user", "title 1", "state-b", "priority", "description", setOf("tag-1", "tag-2"))
             .also { berryPersistence.save(it).await().indefinitely() }
 
-        val berriesStateA = berryPersistence.getAllByUserId("user", 0, 10, "state-a").await().indefinitely()
+        val getArguments = getArguments {
+            userId = "user"
+            pagination {
+                index = 0
+                size = 10
+            }
+            inState = "state-a"
+        }
+        val berriesStateA = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(berriesStateA.persistedBerry).hasSize(1)
         assertThat(berriesStateA.totalCount).isEqualTo(1)
 
-        val berriesStateB = berryPersistence.getAllByUserId("user", 0, 10, "state-b").await().indefinitely()
+        getArguments.inState = "state-b"
+        val berriesStateB = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(berriesStateB.persistedBerry).hasSize(1)
         assertThat(berriesStateB.totalCount).isEqualTo(1)
 
-        val anyState = berryPersistence.getAllByUserId("user", 0, 10, null).await().indefinitely()
+        getArguments.inState = ""
+        val anyState = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(anyState.persistedBerry).hasSize(2)
         assertThat(anyState.totalCount).isEqualTo(2)
     }
@@ -226,11 +276,15 @@ internal class BerryPersistenceIT {
     fun `should find berries with various filters`() {
         setupForFilterTest()
 
-        var result = berryPersistence.getAllByUserId("user-1", 0, 10).await().indefinitely()
+        val getArguments = getArguments {
+            userId = "user-1"
+        }
+        var result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(7)
         assertThat(result.persistedBerry).hasSize(7)
 
-        result = berryPersistence.getAllByUserId("user-1", 0, 10, "open").await().indefinitely()
+        getArguments.inState = "open"
+        result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(4)
         assertThat(result.persistedBerry).hasSize(4)
         assertBerryTitles(
@@ -241,17 +295,23 @@ internal class BerryPersistenceIT {
             "open-low-tags-berry"
         )
 
-        result = berryPersistence.getAllByUserId("user-1", 0, 10, "closed", "medium").await().indefinitely()
+        getArguments.inState = "closed"
+        getArguments.withPriority = "medium"
+        result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(2)
         assertThat(result.persistedBerry).hasSize(2)
         assertBerryTitles(result, "closed-medium-no-tag-berry", "closed-medium-tags-berry")
 
-        result = berryPersistence.getAllByUserId("user-2", 0, 10, "closed", "medium", "tag-1").await().indefinitely()
+        getArguments.userId = "user-2"
+        getArguments.withTag = "tag-1"
+        result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(1)
         assertThat(result.persistedBerry).hasSize(1)
         assertBerryTitles(result, "closed-medium-tags-berry")
 
-        result = berryPersistence.getAllByUserId("user-2", 0, 10, null, null, "tag-1").await().indefinitely()
+        getArguments.withPriority = ""
+        getArguments.inState = ""
+        result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(4)
         assertThat(result.persistedBerry).hasSize(4)
         assertBerryTitles(
@@ -262,7 +322,8 @@ internal class BerryPersistenceIT {
             "open-low-tags-berry"
         )
 
-        result = berryPersistence.getAllByUserId("user-2", 0, 10, null, null, "tag-3").await().indefinitely()
+        getArguments.withTag = "tag-3"
+        result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(1)
         assertThat(result.persistedBerry).hasSize(1)
         assertBerryTitles(
@@ -270,7 +331,10 @@ internal class BerryPersistenceIT {
             "open-medium-tags-berry",
         )
 
-        result = berryPersistence.getAllByUserId("user-2", 0, 10, null, "low", null).await().indefinitely()
+        getArguments.inState = ""
+        getArguments.withPriority = "low"
+        getArguments.withTag = ""
+        result = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
         assertThat(result.totalCount).isEqualTo(3)
         assertThat(result.persistedBerry).hasSize(3)
         assertBerryTitles(
@@ -336,6 +400,68 @@ internal class BerryPersistenceIT {
 
         val emptyTagList = berryPersistence.getTags("user-with-no-berries").collect().asList().await().indefinitely()
         assertThat(emptyTagList).isEmpty()
+    }
+
+    @Test
+    fun `should order correctly`() {
+        BerryPersistenceModel(null, "user", "title b", "state-b", "priority-b", "description", emptySet())
+            .also { berryPersistence.save(it).await().indefinitely() }
+        BerryPersistenceModel(null, "user", "title a", "state-a", "priority-a", "description", emptySet())
+            .also { berryPersistence.save(it).await().indefinitely() }
+        BerryPersistenceModel(null, "user", "title c", "state-c", "priority-c", "description", emptySet())
+            .also { berryPersistence.save(it).await().indefinitely() }
+
+        val getArguments = getArguments {
+            userId = "user"
+            ordering {
+                orderBy = OrderBy.CREATED
+                order = Order.ASCENDING
+            }
+        }
+        var berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        var titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title b", "title a", "title c")
+
+        getArguments.ordering.order = Order.DESCENDING
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title c", "title a", "title b")
+
+        getArguments.ordering.order = Order.ASCENDING
+        getArguments.ordering.orderBy = OrderBy.TITLE
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title a", "title b", "title c")
+
+        getArguments.ordering.order = Order.DESCENDING
+        getArguments.ordering.orderBy = OrderBy.TITLE
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title c", "title b", "title a")
+
+        getArguments.ordering.order = Order.ASCENDING
+        getArguments.ordering.orderBy = OrderBy.PRIORITY
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title a", "title b", "title c")
+
+        getArguments.ordering.order = Order.DESCENDING
+        getArguments.ordering.orderBy = OrderBy.PRIORITY
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title c", "title b", "title a")
+
+        getArguments.ordering.order = Order.ASCENDING
+        getArguments.ordering.orderBy = OrderBy.STATE
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title a", "title b", "title c")
+
+        getArguments.ordering.order = Order.DESCENDING
+        getArguments.ordering.orderBy = OrderBy.STATE
+        berries = berryPersistence.getAllByUserId(getArguments).await().indefinitely()
+        titles = berries.persistedBerry.map { it -> it.berryPersistenceModel.title }
+        assertThat(titles).containsExactly("title c", "title b", "title a")
     }
 
     private fun setupForFilterTest() {
