@@ -374,7 +374,7 @@ internal class BerryResourceIT {
         }
 
         @Test
-        @TestSecurity(user = "d-user", roles = ["user"])
+        @TestSecurity(user = "e-user", roles = ["user"])
         fun `should apply sorting options`() {
             val berry = createBerry()
 
@@ -427,7 +427,7 @@ internal class BerryResourceIT {
         }
 
         @Test
-        @TestSecurity(user = "d-user", roles = ["user"])
+        @TestSecurity(user = "e-user", roles = ["user"])
         fun `should handling sorting options correctly`() {
             Given {
                 queryParam("berry-order-by", "should-fail")
