@@ -209,7 +209,7 @@ internal class BerryServiceTest {
             .item(pagedPersistedBerry)
 
         assertThat { berryService.getBerries(getArguments).await().indefinitely() }.isFailure()
-            .hasClass(IllegalArgumentException::class)
+            .hasClass(PageIndexOutOfRange::class)
     }
 
     @Test
