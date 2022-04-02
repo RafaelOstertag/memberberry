@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel.memberberry</groupId>
     <artifactId>memberberry-server</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3-SNAPSHOT</version>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
