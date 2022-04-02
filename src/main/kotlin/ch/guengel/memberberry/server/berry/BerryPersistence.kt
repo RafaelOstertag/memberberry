@@ -54,9 +54,6 @@ class BerryPersistence(
         scope.launch {
             collection.createIndex(Indexes.ascending("userId", "state", "priority", "created")).await()
                 .atMost(Duration.of(1, ChronoUnit.MINUTES))
-            collection.createIndex(Indexes.compoundIndex(Indexes.ascending("_id"), Indexes.ascending("userId"))).await()
-                .atMost(Duration.of(1, ChronoUnit.MINUTES))
-
         }
     }
 
