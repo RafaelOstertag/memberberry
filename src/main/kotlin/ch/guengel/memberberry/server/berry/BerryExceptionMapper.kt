@@ -19,4 +19,8 @@ class BerryExceptionMapper {
     @ServerExceptionMapper
     fun mapBerryUpdateException(ex: BerryUpdateException): ErrorResponse =
         createErrorMessageUni(ex, RestResponse.Status.INTERNAL_SERVER_ERROR)
+
+    @ServerExceptionMapper
+    fun mapPageIndexOutOfRange(ex: PageIndexOutOfRange): ErrorResponse =
+        createErrorMessageUni(ex, RestResponse.Status.NOT_FOUND)
 }

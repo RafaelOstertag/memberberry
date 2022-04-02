@@ -11,6 +11,8 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import kotlin.math.ceil
 
+class PageIndexOutOfRange(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+
 @ApplicationScoped
 class BerryService(private val berryPersistence: BerryPersistence) {
 
@@ -78,7 +80,7 @@ class BerryService(private val berryPersistence: BerryPersistence) {
             }
             .onItem().transform { page ->
                 if (page.pageIndex >= page.totalPages && page.totalEntries > 0)
-                    throw IllegalArgumentException("Page index '${page.pageIndex}' references non existing page. Maximum page index allowed '${page.totalPages - 1}")
+                    throw PageIndexOutOfRange("Page index '${page.pageIndex}' references non existing page. Maximum page index allowed '${page.totalPages - 1}")
                 else
                     page
             }

@@ -457,5 +457,28 @@ internal class BerryResourceIT {
                 assertThat().body("type", `is`("IllegalArgumentException"))
             }
         }
+
+        @Test
+        @TestSecurity(user = "f-user", roles = ["user"])
+        fun `should return correct status on page index error`() {
+            val berry = createBerry()
+
+            Given {
+                contentType(ContentType.JSON)
+                body(berry)
+            } When {
+                post()
+            } Then {
+                statusCode(201)
+            }
+
+            Given {
+                queryParam("page-index", "1")
+            } When {
+                get()
+            } Then {
+                statusCode(404)
+            }
+        }
     }
 }
