@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.guengel.memberberry</groupId>
     <artifactId>memberberry-server</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3-SNAPSHOT</version>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
@@ -21,7 +21,7 @@
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
-        <memberberry-api.version>1.2.0</memberberry-api.version>
+        <memberberry-api.version>1.2.1</memberberry-api.version>
 
         <firebase-admin.version>8.1.0</firebase-admin.version>
         <quarkus-junit5-mockk.version>1.0.1</quarkus-junit5-mockk.version>
@@ -44,24 +44,8 @@
 
     <repositories>
         <repository>
-            <id>memberberry-maven</id>
-            <url>https://colossus.kruemel.home/nexus/repository/memberberry</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>memberberry-maven-snapshot</id>
-            <url>https://colossus.kruemel.home/nexus/repository/memberberry-snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>rafaelostertag.jfrog.io</id>
+            <url>https://rafaelostertag.jfrog.io/artifactory/maven</url>
         </repository>
     </repositories>
 
@@ -360,10 +344,15 @@
 
     <distributionManagement>
         <repository>
-            <id>memberberry-maven</id>
-            <name>Memberberry Maven Repository</name>
-            <url>https://colossus.kruemel.home/nexus/repository/memberberry/</url>
+            <id>rafaelostertag.jfrog.io</id>
+            <name>JFrog Release Repository</name>
+            <url>https://rafaelostertag.jfrog.io/artifactory/maven-release</url>
         </repository>
+        <snapshotRepository>
+            <id>rafaelostertag.jfrog.io</id>
+            <name>JFrog Snapshot Repository</name>
+            <url>https://rafaelostertag.jfrog.io/artifactory/maven-snapshot</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <profiles>

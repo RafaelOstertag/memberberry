@@ -1,0 +1,84 @@
+version: 2.1
+
+orbs:
+  c: rafaelostertag/common-orb@1.17.0
+
+workflows:
+  build-any-branch:
+    jobs:
+      - c/maven-build-and-test:
+          name: build-and-test
+          sonar-project-key: "ch.guengel.memberberry:memberberry-server"
+          executor: c/java11-build-amd64-machine
+          context:
+            - sonar
+            - repository-read
+      - c/maven-deploy-artifacts:
+          filters:
+            branches:
+              only:
+                - master
+          name: deploy-maven-artifact
+          requires:
+            - build-and-test
+          context:
+            - maven-repository-write
+      - c/maven-trigger-pipeline-with-version:
+          name: trigger-astro-server-angular
+          project-name: astro-server-angular
+          allow-snapshot: true
+          context:
+            - circle-ci
+          requires:
+            - deploy-maven-artifact
+      - c/maven-quarkus-native-docker-image:
+          name: memberberry-server-docker-image-amd64
+          executor: c/graalvm-native-amd64
+          dir: "."
+          context:
+            - repository-read
+            - docker-build
+          requires:
+            - deploy-maven-artifact
+      - c/maven-quarkus-native-docker-image:
+          name: memberberry-server-docker-image-arm64
+          executor: c/graalvm-native-arm64
+          dir: "."
+          remote_docker: false
+          context:
+            - repository-read
+            - docker-build
+          requires:
+            - deploy-maven-artifact
+      - c/maven-multi-arch-manifest:
+          name: build-multi-arch-memberberry-server-manifest
+          image: "rafaelostertag/memberberry-server"
+          context:
+            - docker-build
+          requires:
+            - memberberry-server-docker-image-amd64
+            - memberberry-server-docker-image-arm64
+      - c/maven-trigger-pipeline-with-version:
+          name: trigger-helm-deployment
+          project-name: memberberry-helm
+          filters:
+            branches:
+              only: master
+          context:
+            - circle-ci
+          requires:
+            - build-multi-arch-memberberry-server-manifest
+
+  daily-dependency-check:
+    triggers:
+      - schedule:
+          cron: "21 4 * * *"
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+    jobs:
+      - c/maven-dependency-check:
+          context:
+            - repository-read
