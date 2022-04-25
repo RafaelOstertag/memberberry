@@ -23,14 +23,6 @@ workflows:
             - build-and-test
           context:
             - maven-repository-write
-      - c/maven-trigger-pipeline-with-version:
-          name: trigger-astro-server-angular
-          project-name: astro-server-angular
-          allow-snapshot: true
-          context:
-            - circle-ci
-          requires:
-            - deploy-maven-artifact
       - c/maven-quarkus-native-docker-image:
           name: memberberry-server-docker-image-amd64
           executor: c/graalvm-native-amd64
