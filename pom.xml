@@ -411,6 +411,7 @@
                                 <suppressionFile>dependency-check-suppression.xml</suppressionFile>
                             </suppressionFiles>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                            <failBuildOnCVSS>7.0</failBuildOnCVSS>
                         </configuration>
                         <executions>
                             <execution>
