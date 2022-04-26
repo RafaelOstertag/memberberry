@@ -28,7 +28,7 @@
         <assertk.version>0.25</assertk.version>
 
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <dependency-check-maven.version>7.0.0</dependency-check-maven.version>
+        <dependency-check-maven.version>7.1.0</dependency-check-maven.version>
         <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
