@@ -64,7 +64,7 @@ workflows:
   daily-dependency-check:
     triggers:
       - schedule:
-          cron: "21 4 * * *"
+          cron: "21 4 * * 4"
           filters:
             branches:
               only:
