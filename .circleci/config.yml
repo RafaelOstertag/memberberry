@@ -1,10 +1,26 @@
 version: 2.1
 
+version-tag-only: &version-tag-only
+  tags:
+    only: /^v[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$/
+  branches:
+    ignore: /.*/
+
+schedule-trigger: &schedule-trigger
+  equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+
+
+not-schedule-trigger: &not-schedule-trigger
+  not:
+    *schedule-trigger
+
 orbs:
   c: rafaelostertag/common-orb@1.19.0
 
 workflows:
   build-any-branch:
+    when:
+      *not-schedule-trigger
     jobs:
       - c/maven-build-and-test:
           name: build-and-test
@@ -13,16 +29,28 @@ workflows:
           context:
             - sonar
             - repository-read
-      - c/maven-deploy-artifacts:
+
+  build-and-release:
+    when:
+      *not-schedule-trigger
+    jobs:
+      - c/maven-build-and-test:
+          name: build-and-test
+          sonar-project-key: "ch.guengel.memberberry:memberberry-server"
+          executor: c/java11-build-amd64-machine
+          context:
+            - sonar
+            - repository-read
           filters:
-            branches:
-              only:
-                - master
+            *version-tag-only
+      - c/maven-deploy-artifacts:
           name: deploy-maven-artifact
           requires:
             - build-and-test
           context:
             - maven-repository-write
+          filters:
+            *version-tag-only
       - c/maven-quarkus-native-docker-image:
           name: memberberry-server-docker-image-amd64
           executor: c/graalvm-native-amd64
@@ -32,6 +60,8 @@ workflows:
             - docker-build
           requires:
             - deploy-maven-artifact
+          filters:
+            *version-tag-only
       - c/maven-quarkus-native-docker-image:
           name: memberberry-server-docker-image-arm64
           executor: c/graalvm-native-arm64
@@ -42,6 +72,8 @@ workflows:
             - docker-build
           requires:
             - deploy-maven-artifact
+          filters:
+            *version-tag-only
       - c/maven-multi-arch-manifest:
           name: build-multi-arch-memberberry-server-manifest
           image: "rafaelostertag/memberberry-server"
@@ -50,27 +82,22 @@ workflows:
           requires:
             - memberberry-server-docker-image-amd64
             - memberberry-server-docker-image-arm64
+          filters:
+            *version-tag-only
       - c/maven-trigger-pipeline-with-version:
           name: trigger-helm-deployment
           project-name: memberberry-helm
-          filters:
-            branches:
-              only: master
           context:
             - circle-ci
           requires:
             - build-multi-arch-memberberry-server-manifest
-
-  daily-dependency-check:
-    triggers:
-      - schedule:
-          cron: "21 4 * * 4"
           filters:
-            branches:
-              only:
-                - master
-                - develop
-    jobs:
-      - c/maven-dependency-check:
-          context:
-            - repository-read
+            *version-tag-only
+
+    daily-dependency-check:
+      when:
+        *schedule-trigger
+      jobs:
+        - c/maven-dependency-check:
+            context:
+              - repository-read
