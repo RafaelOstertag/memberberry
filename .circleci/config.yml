@@ -94,10 +94,10 @@ workflows:
           filters:
             *version-tag-only
 
-    daily-dependency-check:
-      when:
-        *schedule-trigger
-      jobs:
-        - c/maven-dependency-check:
-            context:
-              - repository-read
+  daily-dependency-check:
+    when:
+      *schedule-trigger
+    jobs:
+      - c/maven-dependency-check:
+          context:
+            - repository-read
