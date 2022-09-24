@@ -9,7 +9,7 @@
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.6.10</kotlin.version>
+        <kotlin.version>1.7.10</kotlin.version>
 
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.compiler.source>11</maven.compiler.source>
@@ -17,18 +17,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.12.3.Final</quarkus.platform.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
         <memberberry-api.version>1.2.1</memberberry-api.version>
 
         <firebase-admin.version>8.1.0</firebase-admin.version>
-        <quarkus-junit5-mockk.version>1.0.1</quarkus-junit5-mockk.version>
+        <quarkus-junit5-mockk.version>1.1.1</quarkus-junit5-mockk.version>
         <assertk.version>0.25</assertk.version>
 
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <dependency-check-maven.version>7.1.0</dependency-check-maven.version>
+        <dependency-check-maven.version>7.2.1</dependency-check-maven.version>
         <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
